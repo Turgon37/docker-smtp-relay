@@ -5,12 +5,14 @@ ENV RELAY_POSTMASTER postmaster@domain.com
 ENV RELAY_MYDOMAIN domain.com
 ENV RELAY_MYNETWORKS 127.0.0.0/8
 ENV RELAY_HOST [127.0.0.1]:25
+ENV RELAY_LOGIN
+ENV RELAY_PASSWORD
+ENV RELAY_USE_TLS yes
+ENV RELAY_TLS_VERIFY may
 
 
 # Install dependencies
-RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/main/" >> /etc/apk/repositories && \
-    echo "http://dl-cdn.alpinelinux.org/alpine/edge/community/" >> /etc/apk/repositories && \
-    apk --no-cache add \
+RUN apk --no-cache add \
     cyrus-sasl cyrus-sasl-digestmd5 cyrus-sasl-crammd5 \
     postfix \
     supervisor \
@@ -31,13 +33,8 @@ RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/main/" >> /etc/apk/repositor
     postconf -e 'smtpd_sasl_local_domain = $mydomain' && \
     postconf -e 'smtpd_sasl_security_options = noanonymous' && \
 
-    #postconf -e smtpd_banner="\$myhostname ESMTP" && \
-    #postconf -e relayhost=[smtp.gmail.com]:587 && \ 
-    #postconf -e smtp_sasl_auth_enable=yes && \
-    #postconf -e smtp_sasl_password_maps=hash:/etc/postfix/sasl_passwd && \
-    #postconf -e smtp_sasl_security_options=noanonymous && \
-    #postconf -e smtp_tls_CAfile=/etc/postfix/cacert.pem && \
-    #postconf -e smtp_use_tls=yes && \
+    postconf -e 'smtpd_banner = $myhostname ESMTP $mail_name RELAY' && \
+    postconf -e 'smtputf8_enable = no' && \
 
 # Configuration of sasl2
     echo 'pwcheck_method: auxprop' && \
@@ -49,6 +46,7 @@ COPY start.sh /start.sh
 COPY supervisord.conf /etc/supervisord.conf
 
 RUN echo '' > /etc/postfix/aliases && \
+    echo '' > /etc/postfix/sender_canonical && \
     chmod +x /start.sh
 
 EXPOSE 25
