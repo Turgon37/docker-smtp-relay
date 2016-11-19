@@ -2,6 +2,7 @@ FROM alpine:3.4
 MAINTAINER Pierre GINDRAUD <pgindraud@gmail.com>
 
 ENV RELAY_POSTMASTER postmaster@domain.com
+ENV RELAY_MYHOSTNAME relay.domain.com
 ENV RELAY_MYDOMAIN domain.com
 ENV RELAY_MYNETWORKS 127.0.0.0/8
 ENV RELAY_HOST [127.0.0.1]:25
@@ -9,6 +10,7 @@ ENV RELAY_HOST [127.0.0.1]:25
 #ENV RELAY_PASSWORD
 ENV RELAY_USE_TLS yes
 ENV RELAY_TLS_VERIFY may
+#ENV RELAY_TLS_CA
 
 
 # Install dependencies
