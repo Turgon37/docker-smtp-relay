@@ -1,13 +1,13 @@
 FROM alpine:3.4
 MAINTAINER Pierre GINDRAUD <pgindraud@gmail.com>
 
-ENV RELAY_POSTMASTER postmaster@domain.com
-ENV RELAY_MYHOSTNAME relay.domain.com
+#ENV RELAY_MYHOSTNAME relay.domain.com
 ENV RELAY_MYDOMAIN domain.com
 ENV RELAY_MYNETWORKS 127.0.0.0/8
 ENV RELAY_HOST [127.0.0.1]:25
-#ENV RELAY_LOGIN
-#ENV RELAY_PASSWORD
+#ENV RELAY_POSTMASTER postmaster@domain.com
+#ENV RELAY_LOGIN    loginname
+#ENV RELAY_PASSWORD xxxxxxxx
 ENV RELAY_USE_TLS yes
 ENV RELAY_TLS_VERIFY may
 #ENV RELAY_TLS_CA
@@ -41,9 +41,10 @@ RUN apk --no-cache add \
     postconf -e 'smtputf8_enable = no' && \
 
 # Configuration of sasl2
-    echo 'pwcheck_method: auxprop' && \
-    echo 'auxprop_plugin: sasldb' && \
-    echo 'mech_list: PLAIN LOGIN CRAM-MD5 DIGEST-MD5'
+    mkdir -p /etc/sasl2/ && \
+    echo 'pwcheck_method: auxprop' > /etc/sasl2/smtpd.conf && \
+    echo 'auxprop_plugin: sasldb' >> /etc/sasl2/smtpd.conf && \
+    echo 'mech_list: PLAIN LOGIN CRAM-MD5 DIGEST-MD5' >> /etc/sasl2/smtpd.conf
 
 COPY rsyslog.conf /etc/rsyslog.conf
 COPY start.sh /start.sh
@@ -54,5 +55,6 @@ RUN echo '' > /etc/postfix/aliases && \
     chmod +x /start.sh
 
 EXPOSE 25
+VOLUME ['/etc/sasldb2']
 
 CMD ["/start.sh"]
