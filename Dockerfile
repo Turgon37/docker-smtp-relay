@@ -29,12 +29,14 @@ RUN apk --no-cache add \
     postconf -e 'inet_protocols = all' && \
     postconf -e 'myorigin = $mydomain' && \
     postconf -e 'relay_domains = $mydomain' && \
-    
+# SMTPD auth
     postconf -e 'smtpd_sasl_auth_enable = yes' && \
     postconf -e 'smtpd_sasl_type = cyrus' && \
     postconf -e 'smtpd_sasl_local_domain = $mydomain' && \
     postconf -e 'smtpd_sasl_security_options = noanonymous' && \
-
+# Static restrictions for smtp clients
+    postconf -e 'smtpd_relay_restrictions = reject_unauth_destination, permit_mynetworks, permit_sasl_authenticated, reject' && \
+# Other configurations
     postconf -e 'smtpd_banner = $myhostname ESMTP $mail_name RELAY' && \
     postconf -e 'smtputf8_enable = no' && \
 
