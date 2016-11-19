@@ -43,5 +43,7 @@ if [ -n "$RELAY_LOGIN" -a -n "$RELAY_PASSWORD" ]; then
   postconf -e "smtp_use_tls = $RELAY_USE_TLS"
 fi
 
+postconf -e "smtpd_sender_restrictions = check_sender_access static:$RELAY_MYDOMAIN:OK, reject"
+
 
 exec /usr/bin/supervisord -c /etc/supervisord.conf
