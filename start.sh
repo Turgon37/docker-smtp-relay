@@ -34,7 +34,7 @@ if [ -n "$RELAY_LOGIN" -a -n "$RELAY_PASSWORD" ]; then
     postmap /etc/postfix/sasl_passwd
   else
    # use static database
-    postconf -e "smtp_sasl_password_maps = static:$RELAY_LOGIN:$RELAY_PASSWORD"
+    postconf -e "smtp_sasl_password_maps = inline:{$RELAY_LOGIN=$RELAY_PASSWORD}"
   fi
   postconf -e 'smtp_sasl_security_options = noanonymous'
   postconf -e "smtp_tls_CAfile = $RELAY_TLS_CA"
@@ -43,7 +43,7 @@ if [ -n "$RELAY_LOGIN" -a -n "$RELAY_PASSWORD" ]; then
   postconf -e "smtp_use_tls = $RELAY_USE_TLS"
 fi
 
-postconf -e "smtpd_sender_restrictions = check_sender_access static:$RELAY_MYDOMAIN:OK, reject"
+postconf -e "smtpd_sender_restrictions = check_sender_access inline:{$RELAY_MYDOMAIN=OK}, reject"
 
 
 exec /usr/bin/supervisord -c /etc/supervisord.conf
