@@ -28,8 +28,14 @@ if [ -n "$RELAY_LOGIN" -a -n "$RELAY_PASSWORD" ]; then
 	exit 1
   }
   postconf -e 'smtp_sasl_auth_enable = yes'
-  postconf -e "smtp_sasl_password_maps = static:$RELAY_LOGIN:$RELAY_PASSWORD"
-  #postconf -e smtp_sasl_password_maps=hash:/etc/postfix/sasl_passwd && \
+  # use password from hash database
+  if [ -f /etc/postfix/sasl_passwd ]; then
+    postconf -e 'smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd'
+    postmap /etc/postfix/sasl_passwd
+  else
+   # use static database
+    postconf -e "smtp_sasl_password_maps = static:$RELAY_LOGIN:$RELAY_PASSWORD"
+  fi
   postconf -e 'smtp_sasl_security_options = noanonymous'
   postconf -e "smtp_tls_CAfile = $RELAY_TLS_CA"
   postconf -e "smtp_tls_security_level = $RELAY_TLS_VERIFY"
