@@ -1,5 +1,7 @@
 # Docker SMTP Relay
 
+[![](https://images.microbadger.com/badges/image/turgon37/smtp-relay.svg)](https://microbadger.com/images/turgon37/smtp-relay "Get your own image badge on microbadger.com")
+
 This image contains a instance of Postfix SMTP server configured as a SMTP relay.
 This relay is restricted to only one domain name. so it means that only mail that come from RELAY_MYDOMAIN will be relayed to the relayhost.
 
