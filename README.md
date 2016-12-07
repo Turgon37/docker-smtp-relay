@@ -1,7 +1,6 @@
 # Docker SMTP Relay
 
 [![](https://images.microbadger.com/badges/image/turgon37/smtp-relay.svg)](https://microbadger.com/images/turgon37/smtp-relay "Get your own image badge on microbadger.com")
-
 [![](https://images.microbadger.com/badges/version/turgon37/smtp-relay.svg)](https://microbadger.com/images/turgon37/smtp-relay "Get your own version badge on microbadger.com")
 
 This image contains a instance of Postfix SMTP server configured as a SMTP relay.
