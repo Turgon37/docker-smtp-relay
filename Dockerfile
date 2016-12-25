@@ -1,16 +1,16 @@
 FROM alpine:3.4
 MAINTAINER Pierre GINDRAUD <pgindraud@gmail.com>
 
-#ENV RELAY_MYHOSTNAME relay.domain.com
-ENV RELAY_MYDOMAIN domain.com
-ENV RELAY_MYNETWORKS 127.0.0.0/8
-ENV RELAY_HOST [127.0.0.1]:25
-#ENV RELAY_POSTMASTER postmaster@domain.com
-#ENV RELAY_LOGIN    loginname
-#ENV RELAY_PASSWORD xxxxxxxx
-ENV RELAY_USE_TLS yes
-ENV RELAY_TLS_VERIFY may
-#ENV RELAY_TLS_CA
+ENV RELAY_MYDOMAIN=domain.com \
+    RELAY_MYNETWORKS=127.0.0.0/8 \
+    RELAY_HOST=[127.0.0.1]:25 \
+    RELAY_USE_TLS=yes \
+    RELAY_TLS_VERIFY=may \
+    #RELAY_MYHOSTNAME=relay.domain.com \
+    #RELAY_POSTMASTER=postmaster@domain.com \
+    #RELAY_LOGIN=loginname \
+    #RELAY_PASSWORD=xxxxxxxx
+    #RELAY_TLS_CA=/etc/ssl/ca.crt \
 
 
 # Install dependencies
