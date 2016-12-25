@@ -5,12 +5,12 @@ ENV RELAY_MYDOMAIN=domain.com \
     RELAY_MYNETWORKS=127.0.0.0/8 \
     RELAY_HOST=[127.0.0.1]:25 \
     RELAY_USE_TLS=yes \
-    RELAY_TLS_VERIFY=may \
-    #RELAY_MYHOSTNAME=relay.domain.com \
-    #RELAY_POSTMASTER=postmaster@domain.com \
-    #RELAY_LOGIN=loginname \
+    RELAY_TLS_VERIFY=may
+    #RELAY_MYHOSTNAME=relay.domain.com
+    #RELAY_POSTMASTER=postmaster@domain.com
+    #RELAY_LOGIN=loginname
     #RELAY_PASSWORD=xxxxxxxx
-    #RELAY_TLS_CA=/etc/ssl/ca.crt \
+    #RELAY_TLS_CA=/etc/ssl/ca.crt
 
 
 # Install dependencies
