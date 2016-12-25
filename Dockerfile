@@ -55,6 +55,6 @@ RUN echo '' > /etc/postfix/aliases && \
     chmod +x /start.sh
 
 EXPOSE 25
-VOLUME ['/etc/sasldb2']
+VOLUME ["/etc/sasldb2"]
 
 CMD ["/start.sh"]
