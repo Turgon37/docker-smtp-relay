@@ -3,7 +3,7 @@
 [![](https://images.microbadger.com/badges/image/turgon37/smtp-relay.svg)](https://microbadger.com/images/turgon37/smtp-relay "Get your own image badge on microbadger.com")
 [![](https://images.microbadger.com/badges/version/turgon37/smtp-relay.svg)](https://microbadger.com/images/turgon37/smtp-relay "Get your own version badge on microbadger.com")
 
-This image contains a instance of Postfix SMTP server configured as a SMTP relay.
+This image contains an instance of Postfix SMTP server configured as a SMTP relay.
 This relay is restricted to only one domain name. so it means that only mail that come from RELAY_MYDOMAIN will be relayed to the relayhost.
 
 ### Example of usage
@@ -35,7 +35,7 @@ The advantage of this configuration is that only the host in theses case are all
   * This image takes theses environnements variables as parameters
 
 
-| Environnement                | Usage                                                                                                                   |
+| Environment                | Usage                                                                                                                   |
 | ---------------------------- | --------------------------------------------------------                                                                |
 | RELAY_MYHOSTNAME             | The hostname of the SMTP relay (because docker assign a random hostname, you can specify here a human-readable hostname)|
 | RELAY_MYDOMAIN   (mandatory) | The domain name that this relay will forward the mail                                                                   |
@@ -52,9 +52,17 @@ For example of values, you can refer to the Dockerfile
 
 ## Installation
 
+* Manual
+
 ```
 git clone
-docker build -t docker-smtp-relay .
+docker build -t turgon37/smtp-relay .
+```
+
+* or Automatic
+
+```
+docker pull turgon37/smtp-relay
 ```
 
 ## Usage
