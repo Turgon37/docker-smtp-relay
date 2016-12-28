@@ -22,7 +22,6 @@ elif [ "$RELAY_MODE" = 'ALLOW_NETAUTH_NODOMAIN' ]; then
 # set ALLOW_NETAUTH_NODOMAIN mode
 # only authenticated smtp users can send email to another domain than the relay domains list
   postconf -e 'smtpd_relay_restrictions = permit_mynetworks, reject_unauth_destination, permit_sasl_authenticated, reject'
-el
 elif [ "$RELAY_MODE" = 'ALLOW_AUTH_NODOMAIN' ]; then
 # set ALLOW_AUTH_NODOMAIN mode
 # no one can send mail to another domain than the relay domains list
