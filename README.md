@@ -10,7 +10,7 @@ This relay is restricted to only one domain name. so it means that only mail tha
 
 This relay can take place into a information system if you want to give access to some web or other applications a way to send notification by mail.
 
-The advantage of this configuration is that only the host in theses case are allowed to send mails through this relay :
+The advantage of this configuration is that only the host in theses case are allowed to send emails through this relay :
 
    * The host IP's address is in the range of RELAY_MYNETWORKS
    * The host is authenticated with a valid SASL login/password
@@ -35,20 +35,31 @@ The advantage of this configuration is that only the host in theses case are all
   * This image takes theses environnements variables as parameters
 
 
-| Environment                | Usage                                                                                                                   |
-| ---------------------------- | --------------------------------------------------------                                                                |
-| RELAY_MYHOSTNAME             | The hostname of the SMTP relay (because docker assign a random hostname, you can specify here a human-readable hostname)|
-| RELAY_MYDOMAIN   (mandatory) | The domain name that this relay will forward the mail                                                                   |
-| RELAY_MYNETWORKS             | The list of network(s) which are allowed by default to relay mails                                                      |
-| RELAY_HOST       (mandatory) | The remote host to which send the relayed mails (the relayhost)                                                         |
-| RELAY_LOGIN                  | The login name to present to the relayhost during authentication (optionnal)                                            |
-| RELAY_PASSWORD               | The password to present to the relayhost during authentication (optionnal)                                              |
-| RELAY_USE_TLS                | Specify if you want to require a TLS connection to relayhost                                                            |
-| RELAY_TLS_VERIFY             | How to verify the TLS  : (none, may, encrypt, dane, dane-only, fingerprint, verify, secure)                             |
-| RELAY_TLS_CA                 | The path to the CA file use to check relayhost certificate (path in the container)                                      |
-| RELAY_POSTMASTER             | The email address of the postmaster, in order to send error, and misconfiguration notification                          |
+| Environment                 | Usage                                                                                                                                     |
+| --------------------------- | --------------------------------------------------------                                                               ------------------ |
+| RELAY_MYHOSTNAME            | The hostname of the SMTP relay (because docker assign a random hostname, you can specify here a human-readable hostname)                  |
+| RELAY_MYDOMAIN   (mandatory)| The domain name that this relay will forward the mail                                                                                     |
+| RELAY_MYNETWORKS            | The list of network(s) which are allowed by default to relay emails                                                                       |
+| RELAY_HOST       (mandatory)| The remote host to which send the relayed emails (the relayhost)                                                                          |
+| RELAY_LOGIN                 | The login name to present to the relayhost during authentication (optionnal)                                                              |
+| RELAY_PASSWORD              | The password to present to the relayhost during authentication (optionnal)                                                                |
+| RELAY_USE_TLS               | Specify if you want to require a TLS connection to relayhost                                                                              |
+| RELAY_TLS_VERIFY            | How to verify the TLS  : (none, may, encrypt, dane, dane-only, fingerprint, verify, secure)                                               |
+| RELAY_TLS_CA                | The path to the CA file use to check relayhost certificate (path in the container)                                                        |
+| RELAY_POSTMASTER            | The email address of the postmaster, in order to send error, and misconfiguration notification                                            |
+| RELAY_STRICT_SENDER_MYDOMAIN| If set to 'true' all sender adresses must belong to the relay domains                                                                     |
+| RELAY_MODE                  | The predefined mode of relay behaviour, theses modes has been designed by me. The availables values for this parameter are described below|
 
-For example of values, you can refer to the Dockerfile
+#### Relay Mode
+
+Description of parameter
+
+| Relay mode value     | Description                                                                                                                                        | Usage                                                                                                                                                                                                                                                                                             |
+| -------------------- |--------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| STRICT               | Only network and sasl authenticated users can send emails through relay. All emails must have a recipient adress which belong to the relay domains |  Typically you can use this mode to allow one of your application to send email to internals domain emails adresses                                                                                                                                                                               |
+| ALLOW_AUTH_NODOMAIN  | Only network and sasl authenticated users can send emails through relay. All emails send by network authenticated users must have a recipient adress which belong to the relay domains. All emails send by sasl authenticated users can have any recipient adress | You can use this mode to allow one of your (internal) application to send email to external users. In case when some part of your application will be reachable by externals users |
+
+For other examples of values, you can refer to the Dockerfile
 
 ## Installation
 
