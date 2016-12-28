@@ -9,15 +9,25 @@ postconf -e "relayhost = $RELAY_HOST"
 postconf -e "relay_domains = $RELAY_DOMAINS"
 
 # Static restrictions for smtp clients
-if [ "$RELAY_MODE" = 'ALLOW_AUTH_NODOMAIN' ]; then
-# set ALLOW_AUTH_NODOMAIN mode
-# only authenticated smtp users can send email to another domain than the relay domains list
-  postconf -e 'smtpd_relay_restrictions = permit_sasl_authenticated, reject_unauth_destination, permit_mynetworks, reject'
-elif [ "$RELAY_MODE" = 'STRICT' ]; then
+if [ "$RELAY_MODE" = 'STRICT' ]; then
 # set STRICT mode
 # no one can send mail to another domain than the relay domains list
 # only network/sasl authenticated user can send mail through relay
   postconf -e 'smtpd_relay_restrictions = reject_unauth_destination, permit_sasl_authenticated, permit_mynetworks, reject'
+elif [ "$RELAY_MODE" = 'ALLOW_SASLAUTH_NODOMAIN' ]; then
+# set ALLOW_SASLAUTH_NODOMAIN mode
+# only authenticated smtp users can send email to another domain than the relay domains list
+  postconf -e 'smtpd_relay_restrictions = permit_sasl_authenticated, reject_unauth_destination, permit_mynetworks, reject'
+elif [ "$RELAY_MODE" = 'ALLOW_NETAUTH_NODOMAIN' ]; then
+# set ALLOW_NETAUTH_NODOMAIN mode
+# only authenticated smtp users can send email to another domain than the relay domains list
+  postconf -e 'smtpd_relay_restrictions = permit_mynetworks, reject_unauth_destination, permit_sasl_authenticated, reject'
+el
+elif [ "$RELAY_MODE" = 'ALLOW_AUTH_NODOMAIN' ]; then
+# set ALLOW_AUTH_NODOMAIN mode
+# no one can send mail to another domain than the relay domains list
+# only network/sasl authenticated user can send mail through relay
+  postconf -e 'smtpd_relay_restrictions = permit_sasl_authenticated, permit_mynetworks, reject'
 else
 # set the content of the mode into the restrictions
   postconf -e "smtpd_relay_restrictions = $RELAY_MODE"
