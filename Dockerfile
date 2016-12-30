@@ -52,9 +52,11 @@ COPY supervisord.conf /etc/supervisord.conf
 
 RUN echo '' > /etc/postfix/aliases && \
     echo '' > /etc/postfix/sender_canonical && \
+    mkdir -p /data && \
+    ln -s /data/sasldb2 /etc/sasldb2 && \
     chmod +x /start.sh
 
 EXPOSE 25
-VOLUME ["/etc/sasldb2"]
+VOLUME ["/data"]
 
 CMD ["/start.sh"]
