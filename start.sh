@@ -93,8 +93,8 @@ if [ -f /etc/postfix/client_sasl_passwd ]; then
   for peer in "$(cat /etc/postfix/client_sasl_passwd)"; do
     $user=$(echo "$peer" | cut -d \  -f 1)
     $pass=$(echo "$peer" | cut -d \  -f 2)
-    echo $pass | saslpasswd2 -p -u $RELAY_MYDOMAIN -c $user
-    echo "...registered user $user into sasl database"
+    echo $pass | /saslpasswd2.sh -p -u "$RELAY_MYDOMAIN" -c "$user"
+    echo "...registered user '$user' into sasl database"
   done
 fi
 
