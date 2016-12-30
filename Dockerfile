@@ -48,13 +48,15 @@ RUN apk --no-cache add \
 
 COPY rsyslog.conf /etc/rsyslog.conf
 COPY start.sh /start.sh
+COPY saslpasswd.sh /saslpasswd.sh
 COPY supervisord.conf /etc/supervisord.conf
 
 RUN echo '' > /etc/postfix/aliases && \
     echo '' > /etc/postfix/sender_canonical && \
     mkdir -p /data && \
     ln -s /data/sasldb2 /etc/sasldb2 && \
-    chmod +x /start.sh
+    chmod +x /start.sh && \
+    chmod +x /saslpasswd.sh
 
 EXPOSE 25
 VOLUME ["/data"]
