@@ -93,10 +93,10 @@ If you have a host which is not in the range of addresses specified in 'mynetwor
 To create a generic account for this host you have to run this command into the container
 
 ```
-saslpasswd2 -u domain.com -c username
+/saslpasswd.sh -u domain.com -c username
 ```
 
-You have to replace domain.com with your relay domain and you will be prompt for password two time.
+You have to replace domain.com with your relay domain and you will be prompt for password two times.
 
 
    * Add multiple SASL users : 
