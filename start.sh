@@ -65,7 +65,7 @@ if [ -n "$RELAY_LOGIN" -a -n "$RELAY_PASSWORD" ]; then
     postmap /etc/postfix/sasl_passwd
   else
    # use static database
-    postconf -e "smtp_sasl_password_maps = inline:{${RELAY_LOGIN}=${RELAY_PASSWORD}}"
+    postconf -e "smtp_sasl_password_maps = inline:{$RELAY_HOST=${RELAY_LOGIN}:${RELAY_PASSWORD}}"
   fi
   postconf -e 'smtp_sasl_security_options = noanonymous'
 
