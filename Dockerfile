@@ -1,4 +1,4 @@
-FROM alpine:3.4
+FROM alpine:latest
 MAINTAINER Pierre GINDRAUD <pgindraud@gmail.com>
 
 ENV RELAY_MYDOMAIN=domain.com \
@@ -18,10 +18,12 @@ ENV RELAY_MYDOMAIN=domain.com \
 
 # Install dependencies
 RUN apk --no-cache add \
-    cyrus-sasl cyrus-sasl-digestmd5 cyrus-sasl-crammd5 \
+    cyrus-sasl \
+    cyrus-sasl-digestmd5 \
+    cyrus-sasl-crammd5 \
     postfix \
-    supervisor \
-    rsyslog && \
+    rsyslog \
+    supervisor && \
 
 # Configuration of main.cf
     postconf -e 'notify_classes = bounce, 2bounce, data, delay, policy, protocol, resource, software' && \
