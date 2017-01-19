@@ -86,6 +86,12 @@ docker run -p 25:25 -e "RELAY_MYDOMAIN=domain.com" -e "RELAY_HOST=relay:25" dock
 
 ### Configuration during running
 
+   * List all SASL users :
+
+```
+/listpasswd.sh
+```
+
    * Add a SASL user :
 
 If you have a host which is not in the range of addresses specified in 'mynetworks' of postfix, this host have to be sasl authenticated when it connects to the smtp relay.

@@ -57,8 +57,7 @@ RUN echo '' > /etc/postfix/aliases && \
     echo '' > /etc/postfix/sender_canonical && \
     mkdir -p /data && \
     ln -s /data/sasldb2 /etc/sasldb2 && \
-    chmod +x /start.sh && \
-    chmod +x /saslpasswd.sh
+    chmod +x /start.sh /saslpasswd.sh /listpasswd.sh
 
 EXPOSE 25
 VOLUME ["/data"]
