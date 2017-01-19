@@ -49,9 +49,9 @@ RUN apk --no-cache add \
     echo 'mech_list: PLAIN LOGIN CRAM-MD5 DIGEST-MD5' >> /etc/sasl2/smtpd.conf
 
 COPY rsyslog.conf /etc/rsyslog.conf
-COPY start.sh /start.sh
-COPY saslpasswd.sh /saslpasswd.sh
 COPY supervisord.conf /etc/supervisord.conf
+# copy local files
+COPY root/ /
 
 RUN echo '' > /etc/postfix/aliases && \
     echo '' > /etc/postfix/sender_canonical && \
