@@ -21,15 +21,15 @@ The advantage of this configuration is that only the host in theses case are all
 
    * This port is available on this image
 
-| Port              | Usage                                        |
-| ----------------- | ---------------                              |
-| 25                | SMTP for incoming relay user                 |
+| Port   | Usage                         |
+| ------ | ----------------------------  |
+| 25     | SMTP for incoming relay user  |
 
    * This volume is bind on this image
 
-| Volume        | Usage                                         |
-| ------------- | ---------------                               |
-| /etc/sasldb2  | The flat database that contains all SASL user |
+| Volume  | Usage                                                   |
+| --------| ------------------------------------------------------- |
+| /data   | Contains the flat database that contains all SASL user  |
 
 
   * This image takes theses environnements variables as parameters
