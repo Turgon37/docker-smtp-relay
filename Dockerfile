@@ -1,4 +1,4 @@
-FROM alpine:latest
+FROM alpine:3.6
 MAINTAINER Pierre GINDRAUD <pgindraud@gmail.com>
 
 ENV RELAY_MYDOMAIN=domain.com \
