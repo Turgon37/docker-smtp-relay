@@ -59,5 +59,6 @@ RUN  echo '' > /etc/postfix/aliases \
 
 EXPOSE 25
 VOLUME ["/data"]
+WORKDIR /data
 
 CMD ["/start.sh"]
