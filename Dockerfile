@@ -33,6 +33,7 @@ ENV RELAY_MYDOMAIN=domain.com \
     #RELAY_LOGIN=loginname
     #RELAY_PASSWORD=xxxxxxxx
     #RELAY_TLS_CA=/etc/ssl/ca.crt
+    #RELAY_EXTRAS_SETTINGS
 
 
 # Install dependencies
