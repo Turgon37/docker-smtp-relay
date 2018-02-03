@@ -73,8 +73,7 @@ COPY root/ /
 RUN  touch /etc/postfix/aliases \
   && touch /etc/postfix/sender_canonical \
   && mkdir -p /data \
-  && ln -s /data/sasldb2 /etc/sasldb2 \
-  && chmod +x /start.sh /saslpasswd.sh /listpasswd.sh
+  && ln -s /data/sasldb2 /etc/sasldb2
 
 EXPOSE 25/tcp
 VOLUME ["/data"]
