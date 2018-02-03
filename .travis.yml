@@ -1,0 +1,39 @@
+---
+language: bash
+
+# Tell Travis to start Docker when it brings up an environment.
+services:
+  - docker
+
+env:
+  global:
+    - secure: "Kylv7+z1yuIuMGfj+py0tCIn8bG+a0ee7oSCagFxhBoJu1qOmfZQkaipxRHG61cq7SZFVSzl8qTNUQh4POLXHXk1k+2uEuQqUOcCjltEyj0fyCS4/cTowKya3j2YFBrlfMOg19dGCLZ+Sj3ZMLaSz11gSeTWzhvi03EvU72neXE0BC12BBydQGDcKEF4liO7OVih7ejdunZUH2nYvaHldiAKsLt9WWG9pyMjNd9d+pguF9mbLywS3aNWtoD+TshAhdahwL3FKA1Zg+N3bWJQxWCP3sEUz7l2N7l9lmGTogTnncBTL29wzbTOSfKzbjSkeVHjA3Rw2sUL79YwaDGY/7a+BNZIQupjISoUdyJv3aGVdXI0/pcx4Lv2adFWcA1MGEA/5DcCgI4+x33W4a9jmtuvz9GRUUzd+0b2aWlD9Z2VeRxs4jZsvCswkY6DkabamvCNB0Ot1HJ2lmnbnO0pMYK9LdvQxui8K5hw1i9/kOe7OOuHWXJSkFLDTg8CHM03fJakGaAE8Jf1Dn1GgZdytVcSiOtKVVsPH+vinLMvZMR1VB7+k3PIvhzVYOyPHATf0qWMEBlsPO+ul8R3m4iPO6ksvZG6SyrQe7fpKq7bz0FCp1fz6znQJyXhdJoME8SLA7ptWX/5Mjz2U81trmz+b3/N73nyeUN3SxRjl76kkMs="
+    - secure: "xx6tjk04QthS7DPzF7mBYsufvL0crSaOCZheZBOqTwKkYWS+ob8yhjPN3xLZHXG6nIJSdnohto022zOEtkGe9TCNQq50C6VZtbg+y9cP8wNWz40c5zZ+b74QwE2JONCzXauurFe6+cWorsbDgDl0FYRca8JrAOCciY/9XsF2QE24TfoDnaqWoLrQeEsVXnznZZ/y/1sT0hi6Unvsi7cy8mxR+y9W9eDefdWFCin5Aw8cLP66e+x91viCcFP3mW+f3zMEK/IeiMLXiY+F69KRdF3RyX5jCRKWW1SIfuoWLv4Y51ivyYwhqPvHos9zAm9U6o7CaNZqU/nn75nvKa/H5zwNXWJ2kl7W48VyC47ojt83IqSTk+qDkZldxQ3nT7H1zNcyB9BPnB5BPafX+0IOx8nk2f5Yg6/LalyNqCV2sWAlnKUZtmb5wngwoFStOEOr4JMBslxJ5AQHPmuAZmKRe6ilJMsq7INCOCkGY3ax/PAGuttmBPo3G0rOt2vs2YO8XamepJz4UfPPZFU1KDWVwmoMQLFs+L4KeZtbIeDrP/TDv8h7P68hFHvDop2UvMfCCchRkUT9QcZUq/WMA7XPiIG2bmzJLUIEjn9lizYxD9eyX2aUXHmErCIGD2eUflzf8QWYvSgiMMcpvwsDxY7y8/8RhEYV5DgxQ9ht7R2rsvw="
+  matrix:
+    # Provide a list of service version to build
+    - POSTFIX_VERSION=""
+    - RSYSLOG_VERSION=""
+
+script:
+  - export VCS_REF=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_COMMIT; else echo $TRAVIS_PULL_REQUEST_SHA; fi)
+  - export VCS_BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
+
+  # Download tools shim.
+  - wget -O ${PWD}/_tools.sh https://gist.github.com/Turgon37/2ba8685893807e3637ea3879ef9d2062/raw
+
+  # 
+  # Build docker image
+  #
+  - ${PWD}/build.sh
+
+  #
+  ## Run tests
+  #
+  - ${PWD}/tests.sh && touch _test_ok
+
+  #
+  # Deploy
+  #
+  - '[ "$TRAVIS_PULL_REQUEST" == "false" ] || exit 0'
+  - '[ "$TRAVIS_SECURE_ENV_VARS" == "true" -a  -n "$DOCKERHUB_REGISTRY_USERNAME" -a -n "$DOCKERHUB_REGISTRY_PASSWORD" ]'
+  - '[ -f _test_ok ] && ${PWD}/deploy.sh'
