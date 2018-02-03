@@ -85,6 +85,15 @@ if [ "$RELAY_STRICT_SENDER_MYDOMAIN" = 'true' ]; then
   postconf -e "smtpd_sender_restrictions = check_sender_access inline:{$RELAY_MYDOMAIN=OK}, reject"
 fi
 
+# set extras configurations
+if [ ! -z "${RELAY_EXTRAS_SETTINGS}" ]; then
+  for item in ${RELAY_EXTRAS_SETTINGS}; do
+    echo "...set extras setting... ${item}"
+    postconf -e "${item}"
+  done
+fi
+
+
 echo "Bulk registering sasl users..."
 # Fill the sasl user database with seed
 if [ -f /etc/postfix/client_sasl_passwd ]; then
