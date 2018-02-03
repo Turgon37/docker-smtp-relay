@@ -12,7 +12,7 @@ env:
   matrix:
     # Provide a list of service version to build
     - POSTFIX_VERSION=""
-    - RSYSLOG_VERSION=""
+      RSYSLOG_VERSION=""
 
 script:
   - export VCS_REF=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_COMMIT; else echo $TRAVIS_PULL_REQUEST_SHA; fi)
