@@ -1,10 +1,13 @@
 # Docker SMTP Relay
 
+[![Build Status](https://travis-ci.org/Turgon37/docker-smtp-relay.svg?branch=master)](https://travis-ci.org/Turgon37/docker-smtp-relay)
 [![](https://images.microbadger.com/badges/image/turgon37/smtp-relay.svg)](https://microbadger.com/images/turgon37/smtp-relay "Get your own image badge on microbadger.com")
 [![](https://images.microbadger.com/badges/version/turgon37/smtp-relay.svg)](https://microbadger.com/images/turgon37/smtp-relay "Get your own version badge on microbadger.com")
 
 This image contains an instance of Postfix SMTP server configured as a SMTP relay.
 This relay is restricted to only one domain name. so it means that only mail that come from RELAY_MYDOMAIN will be relayed to the relayhost.
+
+:warning: Take care of the [changelogs](CHANGELOG.md) because some breaking changes may happend between versions.
 
 ### Example of usage
 
@@ -89,7 +92,7 @@ docker run -p 25:25 -e "RELAY_MYDOMAIN=domain.com" -e "RELAY_HOST=relay:25" dock
    * List all SASL users :
 
 ```
-/listpasswd.sh
+docker exec smtp-relay /opt/postfix/listpasswd.sh
 ```
 
    * Add a SASL user :
@@ -99,13 +102,12 @@ If you have a host which is not in the range of addresses specified in 'mynetwor
 To create a generic account for this host you have to run this command into the container
 
 ```
-/saslpasswd.sh -u domain.com -c username
+docker exec -it smtp-relay /opt/postfix/saslpasswd.sh -u domain.com -c username
 ```
 
-You have to replace domain.com with your relay domain and you will be prompt for password two times.
+You have to replace domain.com with your relay domain and you will be prompt for password two times. Then you will be prompted for password two times
 
-
-   * Add multiple SASL users : 
+   * Add multiple SASL users :
 
 If you want to add multiple sasl users at the same time you can mount (-v) your credentials list to /etc/postfix/client_sasl_passwd
 This list must contains one credential per line and for each line use the syntax  'USERNAME PASSWORD'  (the username and the password are separated with a blank space)
