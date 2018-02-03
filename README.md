@@ -87,6 +87,48 @@ docker pull turgon37/smtp-relay
 docker run -p 25:25 -e "RELAY_MYDOMAIN=domain.com" -e "RELAY_HOST=relay:25" docker-smtp-relay
 ```
 
+### Docker-compose Specific configuration examples
+
+* unauthenticated smtp relay filtered by subnet and domain name
+
+```
+services:
+  smtp-relay:
+    image: turgon37/smtp-relay:latest
+    environment:
+      - RELAY_POSTMASTER=postmaster@example.net
+      - RELAY_MYHOSTNAME=smtp-relay.example.net
+      - RELAY_MYDOMAIN=example.net
+      - RELAY_MYNETWORKS=127.0.0.0/8 10.0.0.0/24
+      - RELAY_HOST=[10.1.0.1]:25
+    ports:
+      - "10.0.0.1:3000:25"
+```
+
+* authenticated smtp proxy
+
+```
+services:
+  smtp-relay-auth:
+    image: turgon37/smtp-relay:latest
+    environment:
+      - RELAY_POSTMASTER=postmaster@example.net
+      - RELAY_MYHOSTNAME=smtp-relay.example.net
+      - RELAY_MYDOMAIN=example.net
+      - RELAY_MYNETWORKS=127.0.0.0/8 10.0.0.0/24
+      - RELAY_HOST=[10.1.0.1]:25
+      - RELAY_MODE=ALLOW_SASLAUTH_NODOMAIN
+      - RELAY_LOGIN=sasl-user-login
+      - RELAY_PASSWORD=xxxxxxxxxxxx
+      - RELAY_USE_TLS=no
+    ports:
+      - "10.0.0.1:3000:25"
+    volumes:
+      - data-smtp-relay-auth:/data
+volumes:
+  data-smtp-relay-auth:
+```
+
 ### Configuration during running
 
    * List all SASL users :

@@ -6,7 +6,7 @@ Items starting with `DEPRECATE` are important deprecation notices.
 
 ### Image
 
-+ 
++ Upgrade to Alpine 3.7
 
 ### Sasl
 
