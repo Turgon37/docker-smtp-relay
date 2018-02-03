@@ -6,6 +6,7 @@ Items starting with `DEPRECATE` are important deprecation notices.
 
 ### Image
 
++ Add RELAY_EXTRAS_SETTINGS setting
 + Upgrade to Alpine 3.7
 
 ### Sasl
