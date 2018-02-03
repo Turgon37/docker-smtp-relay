@@ -122,6 +122,7 @@ services:
       - RELAY_LOGIN=sasl-user-login
       - RELAY_PASSWORD=xxxxxxxxxxxx
       - RELAY_USE_TLS=no
+      - 'RELAY_EXTRAS_SETTINGS=compatibility_level=1'
     ports:
       - "10.0.0.1:3000:25"
     volumes:
