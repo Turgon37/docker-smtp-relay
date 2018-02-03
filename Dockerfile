@@ -1,5 +1,24 @@
-FROM alpine:3.6
-MAINTAINER Pierre GINDRAUD <pgindraud@gmail.com>
+FROM alpine:3.7
+
+ARG POSTFIX_VERSION
+ARG RSYSLOG_VERSION
+ARG IMAGE_VERSION
+ARG BUILD_DATE
+ARG VCS_REF
+
+LABEL maintainer="Pierre GINDRAUD <pgindraud@gmail.com>" \
+      org.label-schema.build-date="${BUILD_DATE}" \
+      org.label-schema.name="SMTP server configured as a email relay" \
+      org.label-schema.description="This image contains the reliable postfix smtp server configured to be " \
+      org.label-schema.url="https://github.com/Turgon37/docker-smtp-relay" \
+      org.label-schema.vcs-ref="${VCS_REF}" \
+      org.label-schema.vcs-url="https://github.com/Turgon37/docker-smtp-relay" \
+      org.label-schema.vendor="Pierre GINDRAUD" \
+      org.label-schema.version="${IMAGE_VERSION}" \
+      org.label-schema.schema-version="1.0" \
+      application.postfix.version="${POSTFIX_VERSION}" \
+      application.rsyslog.version="${RSYSLOG_VERSION}" \
+      image.version="${IMAGE_VERSION}"
 
 ENV RELAY_MYDOMAIN=domain.com \
     RELAY_MYNETWORKS=127.0.0.0/8 \
@@ -21,8 +40,8 @@ RUN apk --no-cache add \
       cyrus-sasl \
       cyrus-sasl-digestmd5 \
       cyrus-sasl-crammd5 \
-      postfix \
-      rsyslog \
+      postfix=$POSTFIX_VERSION \
+      rsyslog=$RSYSLOG_VERSION \
       supervisor \
 
 # Configuration of main.cf
@@ -43,7 +62,7 @@ RUN apk --no-cache add \
     && postconf -e 'smtputf8_enable = no' \
 
 # Configuration of sasl2
-    && mkdir -p /etc/sasl2/ \
+    && mkdir -p /etc/sasl2 \
     && echo 'pwcheck_method: auxprop' > /etc/sasl2/smtpd.conf \
     && echo 'auxprop_plugin: sasldb' >> /etc/sasl2/smtpd.conf \
     && echo 'mech_list: PLAIN LOGIN CRAM-MD5 DIGEST-MD5' >> /etc/sasl2/smtpd.conf
@@ -51,13 +70,13 @@ RUN apk --no-cache add \
 # copy local files
 COPY root/ /
 
-RUN  echo '' > /etc/postfix/aliases \
-  && echo '' > /etc/postfix/sender_canonical \
+RUN  touch /etc/postfix/aliases \
+  && touch /etc/postfix/sender_canonical \
   && mkdir -p /data \
   && ln -s /data/sasldb2 /etc/sasldb2 \
   && chmod +x /start.sh /saslpasswd.sh /listpasswd.sh
 
-EXPOSE 25
+EXPOSE 25/tcp
 VOLUME ["/data"]
 WORKDIR /data
 
