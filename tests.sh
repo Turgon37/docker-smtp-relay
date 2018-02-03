@@ -20,7 +20,7 @@ echo '-> 1 Test build successful'
 echo '-> Get main image'
 image=`head --lines=1 "${build_tags_file}"`
 
-#2 Test if GLPI successfully installed
+#2 Test if Postfix successfully installed
 echo '-> 2 Test if postfix successfully installed'
 image_name=postfix_2
 docker run --rm $docker_run_options --name "${image_name}" "${image}" which postfix

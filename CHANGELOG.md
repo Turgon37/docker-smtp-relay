@@ -11,6 +11,7 @@ Items starting with `DEPRECATE` are important deprecation notices.
 ### Sasl
 
 * Moved the utility scripts to /opt/postfix
+
 ## 1.0.0 (2017-05-27)
 
 First release
