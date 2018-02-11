@@ -3,7 +3,7 @@
 set -e
 
 # Set configuration according to ENV
-echo "Settings postfix..."
+echo 'Settings postfix...'
 postconf -e "mydomain = ${RELAY_MYDOMAIN}"
 postconf -e "mynetworks = ${RELAY_MYNETWORKS}"
 postconf -e "relayhost = ${RELAY_HOST}"
@@ -94,7 +94,7 @@ if [ ! -z "${RELAY_EXTRAS_SETTINGS}" ]; then
 fi
 
 
-echo "Bulk registering sasl users..."
+echo 'Bulk registering sasl users...'
 # Fill the sasl user database with seed
 if [ -f /etc/postfix/client_sasl_passwd ]; then
   [ ! -r /etc/postfix/client_sasl_passwd ] && {
@@ -109,5 +109,5 @@ if [ -f /etc/postfix/client_sasl_passwd ]; then
   done
 fi
 
-echo "Starting up..."
+echo 'Starting up...'
 exec /usr/bin/supervisord -c /etc/supervisord.conf
