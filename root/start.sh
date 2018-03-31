@@ -110,4 +110,4 @@ if [ -f /etc/postfix/client_sasl_passwd ]; then
 fi
 
 echo 'Starting up...'
-exec /usr/bin/supervisord -c /etc/supervisord.conf
+exec /usr/bin/supervisord --configuration /etc/supervisord.conf
