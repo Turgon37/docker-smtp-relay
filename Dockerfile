@@ -81,6 +81,6 @@ VOLUME ["/data"]
 WORKDIR /data
 
 HEALTHCHECK --interval=5s --timeout=3s --retries=3 \
-    CMD nc -zv 127.0.0.1 27 || exit 1
+    CMD nc -zv 127.0.0.1 25 || exit 1
 
 CMD ["/start.sh"]
