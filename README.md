@@ -38,21 +38,22 @@ The advantage of this configuration is that only the host in theses case are all
   * This image takes theses environnements variables as parameters
 
 
-| Environment                  | Type                | Usage                                                                                                                                     |
-| ---------------------------- | ------------------- |------------------------------------------------------------------------------------------------------------------------------------------ |
-| RELAY_MYHOSTNAME             | String              | The hostname of the SMTP relay (because docker assign a random hostname, you can specify here a human-readable hostname)                  |
-| RELAY_MYDOMAIN   (mandatory) | String              | The domain name that this relay will forward the mail                                                                                     |
-| RELAY_MYNETWORKS             | List of string      | The space separated list of network(s) which are allowed by default to relay emails                                                       |
-| RELAY_HOST       (mandatory) | String              | The remote host to which send the relayed emails (the relayhost)                                                                          |
-| RELAY_LOGIN                  | String              | The login name to present to the relayhost during authentication (optionnal)                                                              |
-| RELAY_PASSWORD               | String              | The password to present to the relayhost during authentication (optionnal)                                                                |
-| RELAY_USE_TLS                | Boolean(yes/no)     | Specify if you want to require a TLS connection to relayhost                                                                              |
-| RELAY_TLS_VERIFY             | Enum                | How to verify the TLS  : (none, may, encrypt, dane, dane-only, fingerprint, verify, secure)                                               |
-| RELAY_TLS_CA                 | String path         | The path to the CA file use to check relayhost certificate (path in the container)                                                        |
-| RELAY_POSTMASTER             | String email address| The email address of the postmaster, in order to send error, and misconfiguration notification                                            |
-| RELAY_STRICT_SENDER_MYDOMAIN | Boolean(true/false) | If set to 'true' all sender adresses must belong to the relay domains                                                                     |
-| RELAY_MODE                   | Enum                | The predefined mode of relay behaviour, theses modes has been designed by me. The availables values for this parameter are described below|
-| RELAY_EXTRAS_SETTINGS        | List of string      | Space separated of extras optiosn that will be passed to postconf -e                                                                      |
+| Environment                  | Type                | Usage                                                                                                                                                          |
+| ---------------------------- | ------------------- |--------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| RELAY_MYHOSTNAME             | String              | The hostname of the SMTP relay (because docker assign a random hostname, you can specify here a human-readable hostname)                                       |
+| RELAY_MYDOMAIN   (mandatory) | String              | The domain name that this relay will forward the mail                                                                                                          |
+| RELAY_MYNETWORKS             | List of strings     | The space separated list of network(s) which are allowed by default to relay emails                                                                            |
+| RELAY_DOMAINS                | List of strings     | The space separated list of external domain names for whose this relay will forward email. Useless if you use a *NODOMAIN relay mode. Default to RELAY_MYDOMAIN|
+| RELAY_HOST       (mandatory) | String              | The remote host to which send the relayed emails (the relayhost)                                                                                               |
+| RELAY_LOGIN                  | String              | The login name to present to the relayhost during authentication (optionnal)                                                                                   |
+| RELAY_PASSWORD               | String              | The password to present to the relayhost during authentication (optionnal)                                                                                     |
+| RELAY_USE_TLS                | Boolean(yes/no)     | Specify if you want to require a TLS connection to relayhost                                                                                                   |
+| RELAY_TLS_VERIFY             | Enum                | How to verify the TLS  : (none, may, encrypt, dane, dane-only, fingerprint, verify, secure)                                                                    |
+| RELAY_TLS_CA                 | String path         | The path to the CA file use to check relayhost certificate (path in the container)                                                                             |
+| RELAY_POSTMASTER             | String email address| The email address of the postmaster, in order to send error, and misconfiguration notification                                                                 |
+| RELAY_STRICT_SENDER_MYDOMAIN | Boolean(true/false) | If set to 'true' all sender adresses must belong to the relay domains                                                                                          |
+| RELAY_MODE                   | Enum                | The predefined mode of relay behaviour, theses modes has been designed by me. The availables values for this parameter are described below                     |
+| RELAY_EXTRAS_SETTINGS        | List of string      | Space separated of extras optiosn that will be passed to postconf -e                                                                                           |
 
 #### Relay Mode
 
