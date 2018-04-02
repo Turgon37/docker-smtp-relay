@@ -98,8 +98,8 @@ echo 'Bulk registering sasl users...'
 # Fill the sasl user database with seed
 if [ -f /etc/postfix/client_sasl_passwd ]; then
   [ ! -r /etc/postfix/client_sasl_passwd ] && {
-	echo "client_sasl_passwd database is not readable" >&2
-	exit 1
+    echo "client_sasl_passwd database is not readable" >&2
+    exit 1
   }
   for peer in "$(cat /etc/postfix/client_sasl_passwd)"; do
     $user=$(echo "${peer}" | awk '{ print $1 }')
