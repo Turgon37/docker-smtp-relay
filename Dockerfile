@@ -2,39 +2,21 @@ FROM alpine:3.7
 
 ARG POSTFIX_VERSION
 ARG RSYSLOG_VERSION
-ARG IMAGE_VERSION
-ARG BUILD_DATE
-ARG VCS_REF
 
-LABEL maintainer="Pierre GINDRAUD <pgindraud@gmail.com>" \
-      org.label-schema.build-date="${BUILD_DATE}" \
-      org.label-schema.name="SMTP server configured as a email relay" \
-      org.label-schema.description="This image contains the reliable postfix smtp server configured to be " \
-      org.label-schema.url="https://github.com/Turgon37/docker-smtp-relay" \
-      org.label-schema.vcs-ref="${VCS_REF}" \
-      org.label-schema.vcs-url="https://github.com/Turgon37/docker-smtp-relay" \
-      org.label-schema.vendor="Pierre GINDRAUD" \
-      org.label-schema.version="${IMAGE_VERSION}" \
-      org.label-schema.schema-version="1.0" \
-      application.postfix.version="${POSTFIX_VERSION}" \
-      application.rsyslog.version="${RSYSLOG_VERSION}" \
-      image.version="${IMAGE_VERSION}"
-
-ENV RELAY_MYDOMAIN=domain.com \
-    RELAY_MYNETWORKS=127.0.0.0/8 \
-    RELAY_HOST=[127.0.0.1]:25 \
-    RELAY_USE_TLS=yes \
-    RELAY_TLS_VERIFY=may \
-    RELAY_DOMAINS=\$mydomain \
-    RELAY_STRICT_SENDER_MYDOMAIN=true \
-    RELAY_MODE=STRICT
-    #RELAY_MYHOSTNAME=relay.domain.com
-    #RELAY_POSTMASTER=postmaster@domain.com
-    #RELAY_LOGIN=loginname
-    #RELAY_PASSWORD=xxxxxxxx
-    #RELAY_TLS_CA=/etc/ssl/ca.crt
-    #RELAY_EXTRAS_SETTINGS
-
+ENV RELAY_MYDOMAIN=domain.com
+ENV RELAY_MYNETWORKS=127.0.0.0/8
+ENV RELAY_HOST=[127.0.0.1]:25
+ENV RELAY_USE_TLS=yes
+ENV RELAY_TLS_VERIFY=may
+ENV RELAY_DOMAINS=\$mydomain
+ENV RELAY_STRICT_SENDER_MYDOMAIN=true
+ENV RELAY_MODE=STRICT
+#ENV RELAY_MYHOSTNAME=relay.domain.com
+#ENV RELAY_POSTMASTER=postmaster@domain.com
+#ENV RELAY_LOGIN=loginname
+#ENV RELAY_PASSWORD=xxxxxxxx
+#ENV RELAY_TLS_CA=/etc/ssl/ca.crt
+#ENV RELAY_EXTRAS_SETTINGS
 
 # Install dependencies
 RUN apk --no-cache add \
