@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+
+## Global settings
+# image name
+DOCKER_IMAGE="${DOCKER_REPO:-smtp-relay}"
+
+
+## Initialization
+set -e
+
+image_version=`cat VERSION`
+image_tags=`cat ${PWD}/_tags`
+
+
+## Enforce versioning
+if curl -s 'https://hub.docker.com/v2/repositories/turgon37/smtp-relay/tags/?page_size=100' | jq -crM '.results[] |.name' | grep -q "^$image_version$"; then
+  echo "ERROR: Tag for image version '$image_version' already exists in registry"
+  exit 1
+fi
+
+
+## Push images
+for tag in $image_tags; do
+  echo "=> tag image '${DOCKER_IMAGE}:building' as '${DOCKER_IMAGE}:${tag}'"
+  docker tag "${DOCKER_IMAGE}:building" "${DOCKER_IMAGE}:${tag}"
+  echo "=> push image '${DOCKER_IMAGE}:${tag}'"
+  docker push "${DOCKER_IMAGE}:${tag}"
+done
+
+

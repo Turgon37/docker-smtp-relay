@@ -73,6 +73,7 @@ for tag in $image_tags; do
 done
 image_final_tags=`echo $image_final_tags | tr ' ' '\n' | uniq | tr '\n' ' '`
 echo "-> use final image tags list ${image_final_tags}"
+echo "${image_final_tags}" > ${PWD}/_tags
 
 
 ## Build image
@@ -92,13 +93,5 @@ docker build --build-arg "POSTFIX_VERSION=${POSTFIX_VERSION}" \
              --label "application.postfix.version=${POSTFIX_VERSION}" \
              --label "application.rsyslog.version=${RSYSLOG_VERSION}" \
              --tag "${DOCKER_IMAGE}:building" \
-             --file Dockerfile \
+             --file "${DOCKERFILE_PATH:-Dockerfile}" \
              .
-
-
-## Tagging image
-for tag in $image_final_tags; do
-  echo "_> tag image '${DOCKER_IMAGE}:building' as '${DOCKER_IMAGE}:${tag}'"
-  docker tag "${DOCKER_IMAGE}:building" "${DOCKER_IMAGE}:${tag}"
-  echo "${DOCKER_IMAGE}:${tag}" >> ${PWD}/_tags
-done
