@@ -76,7 +76,7 @@ echo "-> use final image tags list ${image_final_tags}"
 
 
 ## Build image
-echo "-> building ${DOCKER_IMAGE} with image version: ${image_version}"
+echo "=> building ${DOCKER_IMAGE} with image version: ${image_version}"
 docker build --build-arg "POSTFIX_VERSION=${POSTFIX_VERSION}" \
              --build-arg "RSYSLOG_VERSION=${RSYSLOG_VERSION}" \
              --label 'maintainer=Pierre GINDRAUD <pgindraud@gmail.com>' \
@@ -98,7 +98,7 @@ docker build --build-arg "POSTFIX_VERSION=${POSTFIX_VERSION}" \
 
 ## Tagging image
 for tag in $image_final_tags; do
-  echo "=> tag image "${DOCKER_IMAGE}:building" as "${DOCKER_IMAGE}:${tag}"
+  echo "_> tag image '${DOCKER_IMAGE}:building' as '${DOCKER_IMAGE}:${tag}'"
   docker tag "${DOCKER_IMAGE}:building" "${DOCKER_IMAGE}:${tag}"
-  cat "${DOCKER_IMAGE}:${tag}" >> ${PWD}/_tags
+  echo "${DOCKER_IMAGE}:${tag}" >> ${PWD}/_tags
 done
