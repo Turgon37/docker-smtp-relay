@@ -1,14 +1,17 @@
 #!/usr/bin/env bash
 
+
 ## Global settings
 # image name
 DOCKER_IMAGE="${DOCKER_REPO:-smtp-relay}"
 # "production" branch
 PRODUCTION_BRANCH=${PRODUCTION_BRANCH:-master}
 
+
 ## Local settings
 alpine_version=`cat Dockerfile | grep --perl-regexp --only-matching '(?<=FROM alpine:)[0-9.]+'`
 arch=`uname --machine`
+
 
 ## Initialization
 set -e
@@ -17,6 +20,8 @@ set -e
 if [ -z "$POSTFIX_VERSION" ]; then
   POSTFIX_VERSION=`curl -s "https://pkgs.alpinelinux.org/packages?name=postfix&branch=v${alpine_version}&repo=main&arch=${arch}" \
                      | grep --perl-regexp --only-matching '(?<=<td class="version">)[a-z0-9.-]+' | uniq`
+  # no postfix fixed version => latest build
+  image_tags="${image_tags} latest"
   test -n "$POSTFIX_VERSION"
 fi
 echo "-> selected Postfix version ${POSTFIX_VERSION}"
@@ -49,13 +54,26 @@ echo "-> current vcs branch ${VCS_BRANCH}"
 
 # set the docker tag prefix if needed
 if [ "${VCS_BRANCH}" != "${PRODUCTION_BRANCH}" ]; then
-  docker_tag_prefix="${VCS_BRANCH}-"
+  docker_tags_prefix="${VCS_BRANCH}-"
 fi
-echo "-> use tag prefix ${docker_tag_prefix}"
+echo "-> use tag prefix ${docker_tags_prefix}"
 
 # Get the current image static version
 image_version=`cat VERSION`
 echo "-> use image version ${image_version}"
+
+# customs tags
+image_tags="${image_tags} ${image_version}"
+echo "-> use image tags ${image_tags}"
+
+# finals
+image_final_tags=""
+for tag in $image_tags; do
+  image_final_tags="${image_final_tags} ${docker_tags_prefix}${tag}"
+done
+image_final_tags=`echo $image_final_tags | tr ' ' '\n' | uniq | tr '\n' ' '`
+echo "-> use final image tags list ${image_final_tags}"
+
 
 ## Build image
 echo "-> building ${DOCKER_IMAGE} with image version: ${image_version}"
@@ -72,7 +90,15 @@ docker build --build-arg "POSTFIX_VERSION=${POSTFIX_VERSION}" \
              --label "org.label-schema.version=${image_version}" \
              --label 'org.label-schema.schema-version=1.0' \
              --label "application.postfix.version=${POSTFIX_VERSION}" \
-             --label "application.rsyslog.version="${RSYSLOG_VERSION}" \
-             --tag "${DOCKER_IMAGE}:${CACHE_TAG}" \
+             --label "application.rsyslog.version=${RSYSLOG_VERSION}" \
+             --tag "${DOCKER_IMAGE}:building" \
              --file Dockerfile \
              .
+
+
+## Tagging image
+for tag in $image_final_tags; do
+  echo "=> tag image "${DOCKER_IMAGE}:building" as "${DOCKER_IMAGE}:${tag}"
+  docker tag "${DOCKER_IMAGE}:building" "${DOCKER_IMAGE}:${tag}"
+  cat "${DOCKER_IMAGE}:${tag}" >> ${PWD}/_tags
+done
