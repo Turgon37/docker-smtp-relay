@@ -14,7 +14,7 @@ image_tags=`cat ${PWD}/_tags`
 
 
 ## Enforce versioning
-if curl -s 'https://hub.docker.com/v2/repositories/turgon37/smtp-relay/tags/?page_size=100' | jq -crM '.results[] |.name' | grep -q "^$image_version$"; then
+if curl -s 'https://hub.docker.com/v2/repositories/turgon37/smtp-relay/tags/?page_size=100' | grep -q '"name": "'${image_version}'"'; then
   echo "ERROR: Tag for image version '$image_version' already exists in registry"
   exit 1
 fi
