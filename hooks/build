@@ -75,6 +75,13 @@ image_final_tags=`echo $image_final_tags | tr ' ' '\n' | uniq | tr '\n' ' '`
 echo "-> use final image tags list ${image_final_tags}"
 echo "${image_final_tags}" > ${PWD}/_tags
 
+echo "-> use image name ${DOCKER_IMAGE}"
+echo "${DOCKER_IMAGE}" > ${PWD}/_image
+
+image_building_name="${DOCKER_IMAGE}:building"
+echo "-> use image name '${DOCKER_IMAGE}' for build"
+echo "${image_building_name}" > ${PWD}/_image_build
+
 
 ## Build image
 echo "=> building ${DOCKER_IMAGE} with image version: ${image_version}"
@@ -92,6 +99,6 @@ docker build --build-arg "POSTFIX_VERSION=${POSTFIX_VERSION}" \
              --label 'org.label-schema.schema-version=1.0' \
              --label "application.postfix.version=${POSTFIX_VERSION}" \
              --label "application.rsyslog.version=${RSYSLOG_VERSION}" \
-             --tag "${DOCKER_IMAGE}:building" \
+             --tag "${image_building_name}" \
              --file "${DOCKERFILE_PATH:-Dockerfile}" \
              .
