@@ -32,50 +32,54 @@ if [ -z "$RSYSLOG_VERSION" ]; then
                      | grep --perl-regexp --only-matching '(?<=<td class="version">)[a-z0-9.-]+' | uniq`
   test -n "$RSYSLOG_VERSION"
 fi
-echo "-> selected Rsyslog version ${RSYSLOG_VERSION}"
+echo "-> selected Rsyslog version '${RSYSLOG_VERSION}'"
 
 # If empty commit, fetch the current from local git rpo
 if [ -n "${SOURCE_COMMIT}" ]; then
   VCS_REF="${SOURCE_COMMIT}"
+elif [ -n "${TRAVIS_COMMIT}" ]; then
+  VCS_REF="${TRAVIS_COMMIT}"
 else
   VCS_REF="`git rev-parse --short HEAD`"
 fi
-test -n "$VCS_REF"
-echo "-> current vcs reference ${VCS_REF}"
+test -n "${VCS_REF}"
+echo "-> current vcs reference '${VCS_REF}'"
 
 # If empty branch, fetch the current from local git rpo
 if [ -n "${SOURCE_BRANCH}" ]; then
   VCS_BRANCH="${SOURCE_BRANCH}"
+elif [ -n "${TRAVIS_BRANCH}" ]; then
+  VCS_BRANCH="${TRAVIS_BRANCH}"
 else
   VCS_BRANCH="`git rev-parse --abbrev-ref HEAD`"
 fi
-test -n "$VCS_BRANCH"
-echo "-> current vcs branch ${VCS_BRANCH}"
+test -n "${VCS_BRANCH}"
+echo "-> current vcs branch '${VCS_BRANCH}'"
 
 # set the docker tag prefix if needed
 if [ "${VCS_BRANCH}" != "${PRODUCTION_BRANCH}" ]; then
   docker_tags_prefix="${VCS_BRANCH}-"
 fi
-echo "-> use tag prefix ${docker_tags_prefix}"
+echo "-> use tag prefix '${docker_tags_prefix}'"
 
 # Get the current image static version
 image_version=`cat VERSION`
-echo "-> use image version ${image_version}"
+echo "-> use image version '${image_version}'"
 
 # customs tags
 image_tags="${image_tags} ${image_version}"
-echo "-> use image tags ${image_tags}"
+echo "-> use image tags '${image_tags}'"
 
 # finals
 image_final_tags=""
 for tag in $image_tags; do
   image_final_tags="${image_final_tags} ${docker_tags_prefix}${tag}"
 done
-image_final_tags=`echo $image_final_tags | tr ' ' '\n' | uniq | tr '\n' ' '`
-echo "-> use final image tags list ${image_final_tags}"
+image_final_tags=`echo ${image_final_tags} | tr ' ' '\n' | uniq | tr '\n' ' '`
+echo "-> use final image tags list '${image_final_tags}'"
 echo "${image_final_tags}" > ${PWD}/_tags
 
-echo "-> use image name ${DOCKER_IMAGE}"
+echo "-> use image name '${DOCKER_IMAGE}'"
 
 image_building_name="${DOCKER_IMAGE}:building"
 echo "-> use image name '${image_building_name}' for build"
@@ -83,7 +87,7 @@ echo "${image_building_name}" > ${PWD}/_image_build
 
 
 ## Build image
-echo "=> building ${image_building_name} with image version: ${image_version}"
+echo "=> building '${image_building_name}' with image version '${image_version}'"
 docker build --build-arg "POSTFIX_VERSION=${POSTFIX_VERSION}" \
              --build-arg "RSYSLOG_VERSION=${RSYSLOG_VERSION}" \
              --label 'maintainer=Pierre GINDRAUD <pgindraud@gmail.com>' \
