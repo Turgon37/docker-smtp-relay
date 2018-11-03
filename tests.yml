@@ -1,0 +1,14 @@
+schemaVersion: 2.0.0
+
+metadataTest:
+  exposedPorts: ["25"]
+  volumes: ["/data"]
+
+commandTests:
+  - name: postfix
+    command: which
+    args:
+      - postfix
+    expectedOutput:
+      - /.*/.?bin/postfix
+    exitCode: 0

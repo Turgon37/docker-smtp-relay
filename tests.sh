@@ -1,26 +1,27 @@
 #!/usr/bin/env bash
 
-## Local settings
-build_tags_file="${PWD}/build.sh~tags"
-docker_run_options='--detach'
 
-## Settings initialization
+## Initialization
 set -e
-set -x
 
-source ${PWD}/_tools.sh
+image_building_name=`cat ${PWD}/_image_build`
 
-## Tests
 
-#1 Test build successful
-echo '-> 1 Test build successful'
-[ -f "${build_tags_file}" ]
+## Prepare
+if [[ -z $(which container-structure-test 2>/dev/null) ]]; then
+  echo "Retrieving structure-test binary...."
+  if [[ "$TRAVIS_OS_NAME" != 'linux' ]]; then
+    echo "container-structure-test only released for Linux at this time."
+    echo "To run on OSX, clone the repository and build using 'make'."
+    exit 1
+  else
+    curl -LO https://storage.googleapis.com/container-structure-test/latest/container-structure-test-linux-amd64 \
+    && chmod +x container-structure-test-linux-amd64 \
+    && sudo mv container-structure-test-linux-amd64 /usr/local/bin/container-structure-test
+  fi
+fi
 
-# Get main image
-echo '-> Get main image'
-image=`head --lines=1 "${build_tags_file}"`
 
-#2 Test if Postfix successfully installed
-echo '-> 2 Test if postfix successfully installed'
-image_name=postfix_2
-docker run --rm $docker_run_options --name "${image_name}" "${image}" which postfix
+## Test
+container-structure-test \
+    test --image "${image_building_name}" --config ./tests.yml

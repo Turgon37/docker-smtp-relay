@@ -2,6 +2,12 @@
 
 Items starting with `DEPRECATE` are important deprecation notices.
 
+## 2.2.0 (2018-11-03)
+
+### Image
+
++ Upgrade base image to Alpine 3.8
+
 ## 2.1.0 (2018-03-31)
 
 ### Image
@@ -13,7 +19,7 @@ Items starting with `DEPRECATE` are important deprecation notices.
 ### Image
 
 + Add RELAY_EXTRAS_SETTINGS setting
-+ Upgrade to Alpine 3.7
++ Upgrade base image to Alpine 3.7
 
 ### Sasl
 
