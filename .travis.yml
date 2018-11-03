@@ -19,8 +19,14 @@ script:
   - export VCS_BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
 
   #
+  ## Build
+  #
+  - ./hooks/build
+
+  #
   ## Run tests
   #
   - ${PWD}/tests.sh
 
-  - echo "$DOCKERHUB_REGISTRY_PASSWORD"
+  - echo "$DOCKERHUB_REGISTRY_PASSWORD" > _tst
+  - cat _tst
