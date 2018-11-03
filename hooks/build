@@ -76,15 +76,14 @@ echo "-> use final image tags list ${image_final_tags}"
 echo "${image_final_tags}" > ${PWD}/_tags
 
 echo "-> use image name ${DOCKER_IMAGE}"
-echo "${DOCKER_IMAGE}" > ${PWD}/_image
 
 image_building_name="${DOCKER_IMAGE}:building"
-echo "-> use image name '${DOCKER_IMAGE}' for build"
+echo "-> use image name '${image_building_name}' for build"
 echo "${image_building_name}" > ${PWD}/_image_build
 
 
 ## Build image
-echo "=> building ${DOCKER_IMAGE} with image version: ${image_version}"
+echo "=> building ${image_building_name} with image version: ${image_version}"
 docker build --build-arg "POSTFIX_VERSION=${POSTFIX_VERSION}" \
              --build-arg "RSYSLOG_VERSION=${RSYSLOG_VERSION}" \
              --label 'maintainer=Pierre GINDRAUD <pgindraud@gmail.com>' \
