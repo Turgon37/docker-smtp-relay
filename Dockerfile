@@ -1,5 +1,7 @@
 FROM alpine:3.8
 
+LABEL maintainer='Pierre GINDRAUD <pgindraud@gmail.com>'
+
 ARG POSTFIX_VERSION
 ARG RSYSLOG_VERSION
 
@@ -26,8 +28,7 @@ RUN apk --no-cache add \
       postfix=$POSTFIX_VERSION \
       rsyslog=$RSYSLOG_VERSION \
       supervisor \
-
-# Configuration of main.cf
+    && echo Configuration of main.cf \
     && postconf -e 'notify_classes = bounce, 2bounce, data, delay, policy, protocol, resource, software' \
     && postconf -e 'bounce_notice_recipient = $2bounce_notice_recipient' \
     && postconf -e 'delay_notice_recipient = $2bounce_notice_recipient' \
@@ -35,16 +36,15 @@ RUN apk --no-cache add \
     && postconf -e 'inet_interfaces = all' \
     && postconf -e 'inet_protocols = all' \
     && postconf -e 'myorigin = $mydomain' \
-# SMTPD auth
+    && echo SMTPD auth \
     && postconf -e 'smtpd_sasl_auth_enable = yes' \
     && postconf -e 'smtpd_sasl_type = cyrus' \
     && postconf -e 'smtpd_sasl_local_domain = $mydomain' \
     && postconf -e 'smtpd_sasl_security_options = noanonymous' \
-# Other configurations
+    && echo Other configurations \
     && postconf -e 'smtpd_banner = $myhostname ESMTP $mail_name RELAY' \
     && postconf -e 'smtputf8_enable = no' \
-
-# Configuration of sasl2
+    && echo Configuration of sasl2 \
     && mkdir -p /etc/sasl2 \
     && echo 'pwcheck_method: auxprop' > /etc/sasl2/smtpd.conf \
     && echo 'auxprop_plugin: sasldb' >> /etc/sasl2/smtpd.conf \
