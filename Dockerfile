@@ -65,4 +65,7 @@ WORKDIR /data
 HEALTHCHECK --interval=5s --timeout=3s --retries=3 \
     CMD nc -zv 127.0.0.1 25 || exit 1
 
-CMD ["/start.sh"]
+COPY /entrypoint.sh /
+
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["/usr/bin/supervisord", "--configuration", "/etc/supervisord.conf"]
