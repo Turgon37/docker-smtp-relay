@@ -1,19 +1,19 @@
 #!/usr/bin/env bash
 
-
 ## Global settings
 # image name
 DOCKER_IMAGE="${DOCKER_REPO:-smtp-relay}"
-# "production" branch
-PRODUCTION_BRANCH=${PRODUCTION_BRANCH:-master}
+# use dockefile
+DOCKERFILE_PATH=Dockerfile
 
+## Initialization
+set -e
 
 ## Local settings
 alpine_version=`cat Dockerfile | grep --perl-regexp --only-matching '(?<=FROM alpine:)[0-9.]+'`
 arch=`uname --machine`
 
-
-## Initialization
+## Settings initialization
 set -e
 
 # If empty version, fetch the latest from repository
@@ -45,52 +45,23 @@ fi
 test -n "${VCS_REF}"
 echo "-> current vcs reference '${VCS_REF}'"
 
-# If empty branch, fetch the current from local git rpo
-if [ -n "${SOURCE_BRANCH}" ]; then
-  VCS_BRANCH="${SOURCE_BRANCH}"
-elif [ -n "${TRAVIS_BRANCH}" ]; then
-  VCS_BRANCH="${TRAVIS_BRANCH}"
-else
-  VCS_BRANCH="`git rev-parse --abbrev-ref HEAD`"
-fi
-test -n "${VCS_BRANCH}"
-echo "-> current vcs branch '${VCS_BRANCH}'"
-
-# set the docker tag prefix if needed
-if [ "${VCS_BRANCH}" != "${PRODUCTION_BRANCH}" ]; then
-  docker_tags_prefix="${VCS_BRANCH}-"
-fi
-echo "-> use tag prefix '${docker_tags_prefix}'"
-
 # Get the current image static version
 image_version=`cat VERSION`
 echo "-> use image version '${image_version}'"
 
-# customs tags
-image_tags="${image_tags} ${image_version}"
-echo "-> use image tags '${image_tags}'"
-
-# finals
-image_final_tags=""
-for tag in $image_tags; do
-  image_final_tags="${image_final_tags} ${docker_tags_prefix}${tag}"
-done
-image_final_tags=`echo ${image_final_tags} | tr ' ' '\n' | uniq | tr '\n' ' '`
-echo "-> use final image tags list '${image_final_tags}'"
-echo "${image_final_tags}" > ${PWD}/_tags
-
-echo "-> use image name '${DOCKER_IMAGE}'"
+# Compute variant from dockerfile name
+if ! [ -f ${DOCKERFILE_PATH} ]; then
+  echo 'You must select a valid dockerfile with DOCKERFILE_PATH' 1>&2
+  exit 1
+fi
 
 image_building_name="${DOCKER_IMAGE}:building"
 echo "-> use image name '${image_building_name}' for build"
-echo "${image_building_name}" > ${PWD}/_image_build
-
 
 ## Build image
 echo "=> building '${image_building_name}' with image version '${image_version}'"
 docker build --build-arg "POSTFIX_VERSION=${POSTFIX_VERSION}" \
              --build-arg "RSYSLOG_VERSION=${RSYSLOG_VERSION}" \
-             --label 'maintainer=Pierre GINDRAUD <pgindraud@gmail.com>' \
              --label "org.label-schema.build-date=`date -u +'%Y-%m-%dT%H:%M:%SZ'`" \
              --label 'org.label-schema.name=smtp-relay' \
              --label 'org.label-schema.description=SMTP server configured as a email relay' \
@@ -103,5 +74,5 @@ docker build --build-arg "POSTFIX_VERSION=${POSTFIX_VERSION}" \
              --label "application.postfix.version=${POSTFIX_VERSION}" \
              --label "application.rsyslog.version=${RSYSLOG_VERSION}" \
              --tag "${image_building_name}" \
-             --file "${DOCKERFILE_PATH:-Dockerfile}" \
+             --file "${DOCKERFILE_PATH}" \
              .
