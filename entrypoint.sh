@@ -73,9 +73,9 @@ if expr match $1 '.*supervisord' >/dev/null; then
   if [ -f $aliases ]; then
     newaliases
   fi
-  
+
   # Configure authentification to relay if needed
-  if [ -n "${RELAY_LOGIN}" -a -n "${RELAY_PASSWORD}" ]; then
+  if [ \( -n "${RELAY_LOGIN}" -a -n "${RELAY_PASSWORD}" \) -o \( -f /etc/postfix/sasl_passwd \) ]; then
     postconf -e 'smtp_sasl_auth_enable = yes'
     # use password from hash database
     if [ -f /etc/postfix/sasl_passwd ]; then

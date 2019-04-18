@@ -128,6 +128,42 @@ volumes:
   data-smtp-relay-auth:
 ```
 
+### Using external relay credentials
+
+If you want to prevent having your relay credentials in your docker-compose file, you can mount them (instead of setting
+`RELAY_LOGIN`and `RELAY_PASSWORD` variables) into `/etc/postfix/sasl_passwd` 
+
+Taking again our `authenticated smtp proxy` example above, we would now have:
+
+```yaml
+services:
+  smtp-relay-auth:
+    image: turgon37/smtp-relay:latest
+    environment:
+      - RELAY_POSTMASTER=postmaster@example.net
+      - RELAY_MYHOSTNAME=smtp-relay.example.net
+      - RELAY_MYDOMAIN=example.net
+      - RELAY_MYNETWORKS=127.0.0.0/8 10.0.0.0/24
+      - RELAY_HOST=[10.1.0.1]:25
+      - RELAY_MODE=ALLOW_SASLAUTH_NODOMAIN
+      - RELAY_USE_TLS=no
+      - 'RELAY_EXTRAS_SETTINGS=compatibility_level=1'
+    ports:
+      - "10.0.0.1:3000:25"
+    volumes:
+      - data-smtp-relay-auth:/data
+      - "/my/local/path/sasl_passwd:/etc/postfix/sasl_passwd"
+volumes:
+  data-smtp-relay-auth:
+```
+
+And our local `sasl_passwd` file would have as contents:
+
+```bash
+user@host:~$cat /my/local/path/sasl_passwd
+[10.1.0.1]:25 sasl-user-login:xxxxxxxxxxxx  
+```
+
 ### Configuration during running
 
 * List all SASL users :
