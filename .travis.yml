@@ -6,18 +6,27 @@ services:
   - docker
 
 env:
+  global:
+    - DOCKER_REPO=turgon37/smtp-relay
+    - secure: 'Uylj8DPzAo1cq1rPu8zZPUkDYroQWy+c7MvOsN0Oh/SU6LK5hoj1yrvSu8ylp7OoGrJygn9kC3cSIQ/krEwd8LaZU0i4yMP5FFKrry9kn38DlBIzU+pmSSgPYouBfo0MI1ekt5S3UhEpof0fCOZK1dyTqlc0D+y93kHP9s7un15bJm463/tMipaxIy6VZs8pZOk5oMZZJJtzzqwbsDaMnMhDT5w1h6pZftmDJGKuIABC1KEpbpLa6Cw700JWsUep994lSuAgUUC2SJa3O9j18vC9f7WvsqtU1NLzdKbKNZ4DTfwmur1wn5R8qb99/ZK032TpgiCJDRfj4CD5rKp6u5h3fDFm8mSIw3YFh42i984+47tip+2djLg5mfLx3Q6AR7ZRMzf725gnUHUuJX/JtDOAe3+xZdWju13NYgdUOhzplYL/3RgD0oMVzgKmIM4WbuENC6150XFTNbiLc+zL0emlDItfTfqYGQmI/a5ed7LSkTvXbj8DHPXWWzaj7MM0ZI7FE4VcYTfwSHpO0fNyvxPGhqTzXmnC0JtGDTwqV6Cx46iDXhe7fB3Bu4bMk0ySBCQi/cQcNiBCJ+8TQczdQut+kNgC4FrR3uYtZa/Mx1NonezYN3RszdRgIwOt3e3c3AqE6yj/lvGWVpjWJNNGdE5eJUrTmmQCynQE8ua+DNw='
+    - secure: 'To0DN++rEnztftetouXKHeJCV20/2W+eFUlcWsIszlCnEOYUCx9PyKKT1lEIu1gQ8d4Oxu5LBHY4XLzNhvfT5BuO0rBFdzxm2QkUjKmg9X/kWf4ebkxKhWqjXD4rS/e6/Zsj/5ocAFw9vqzQjILJdvvBTz8D9v4sFtBnmmCJLVbd6RvdU8DemZAk21uJqIxCvZ81vyLwCW1syHK35icdrxsS3x6IEFJ1W2aEPCmTALE9EHoixR4XuD1OI8+AKN7avphy9ZyaetCz6YPfVe6aaXcEsih2YFoZ9B2xBRZmKzqY5/N/taRoAx99kY+2b/iN/5TFJ7PT+/bvYYQD4eA29HIHwdbsrV087URiRQ56/YNq+CkfXvB37tMc4LjNFeSHHCmXXqxbq1xVYmANGgMM3L9MsB1CRKe1lthA3qFBFgCjTsAFsfEHnIawSxAznHlS3w9S8VYDV0KyvjwighQW5U5UOJFV0O9SZCopqcJtQwrSsPjExi7lWXqPII4LWcq9FN+y2uLn2IyHpKKvSG8hmq6xFSO05RPQWtXgSI3GQ/RqccuUxUuh8L7rj+CPjlnwG6gNE3I96chJfJ3ds51gtwhmjWfyiODwDnu2SyOgTvhkVfD/ikhMMHGcAsUNjgqkUHUAI99E61lspD6StotFXve+dh4kryBRFxq25Sx1RiQ='
   matrix:
     # Provide a list of service version to build
-    - POSTFIX_VERSION=''
-      RSYSLOG_VERSION=''
+    - POSTFIX_VERSION='' RSYSLOG_VERSION=''
 
 script:
   #
   ## Build
   #
-  - ./hooks/build
+  - ./build.sh
 
   #
   ## Run tests
   #
-  - ./tests.sh
+  - ./tests.sh && touch _test_ok
+
+  #
+  ## Publish
+  #
+  - '[ "$TRAVIS_PULL_REQUEST" == "false" ] || exit 0'
+  - '[ "$TRAVIS_SECURE_ENV_VARS" == "true" -a -f _test_ok ] && ./publish.sh'
