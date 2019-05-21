@@ -79,7 +79,7 @@ for tag in $image_final_tags; do
     echo "-? check if image version '$image_version' already exists in registry"
     if curl -s "https://hub.docker.com/v2/repositories/${username}/${repo}/tags/?page_size=100" | grep -q '"name": "'${tag}'"'; then
       echo "ERROR: Tag '${tag}' for image version '$image_version' already exists in registry" 1>&2
-      exit 1
+      exit 0
     fi
   fi
 done
