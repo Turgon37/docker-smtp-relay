@@ -2,8 +2,6 @@
 
 set -e
 
-RELAY_TLS_CA=${RELAY_TLS_CA:-/etc/ssl/certs/ca-certificates.crt}
-
 ## Configure timezone
 function setTimezone() {
   if [ -n "${TZ}" ]; then

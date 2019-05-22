@@ -13,11 +13,11 @@ ENV RELAY_TLS_VERIFY=may
 ENV RELAY_DOMAINS=\$mydomain
 ENV RELAY_STRICT_SENDER_MYDOMAIN=true
 ENV RELAY_MODE=STRICT
+ENV RELAY_TLS_CA /etc/ssl/certs/ca-certificates.crt
 #ENV RELAY_MYHOSTNAME=relay.domain.com
 #ENV RELAY_POSTMASTER=postmaster@domain.com
 #ENV RELAY_LOGIN=loginname
 #ENV RELAY_PASSWORD=xxxxxxxx
-#ENV RELAY_TLS_CA=/etc/ssl/ca.crt
 #ENV RELAY_EXTRAS_SETTINGS
 
 # Install dependencies
