@@ -1,4 +1,7 @@
-FROM alpine:3.8
+#
+# Final stage for image
+#
+FROM alpine:3.10
 
 LABEL maintainer='Pierre GINDRAUD <pgindraud@gmail.com>'
 
