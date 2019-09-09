@@ -73,17 +73,17 @@ if expr match $1 '.*supervisord' >/dev/null; then
   if [ -f $aliases ]; then
     newaliases
   fi
-  
+
   # Configure authentification to relay if needed
-  if [ -n "${RELAY_LOGIN}" -a -n "${RELAY_PASSWORD}" ]; then
+  if [ \( -n "${RELAY_LOGIN}" -a -n "${RELAY_PASSWORD}" \) -o \( -f /etc/postfix/sasl_passwd \) ]; then
     postconf -e 'smtp_sasl_auth_enable = yes'
-    # use password from hash database
-    if [ -f /etc/postfix/sasl_passwd ]; then
-      postconf -e 'smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd'
-      postmap /etc/postfix/sasl_passwd
-    else
+    # use password from hash database    
+    if [ -n "${RELAY_LOGIN}" -a -n "${RELAY_PASSWORD}" ]; then
      # use static database
       postconf -e "smtp_sasl_password_maps = inline:{${RELAY_HOST}=${RELAY_LOGIN}:${RELAY_PASSWORD}}"
+    else
+      postconf -e 'smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd'
+      postmap /etc/postfix/sasl_passwd
     fi
     postconf -e 'smtp_sasl_security_options = noanonymous'
   
