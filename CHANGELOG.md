@@ -2,11 +2,20 @@
 
 Items starting with `DEPRECATE` are important deprecation notices.
 
+## 3.1.0 (2019-09-09)
+
+### Image
+
+- Allow use of external users database (thanks to @kir4h)
+- Update alpine to 3.10
+- Refactor the entrypoint.sh
+- Update supervisor configuration
+
 ## 3.0.1 (2019-05-23)
 
 ### Image
 
-- Image has now a default value for `RELAY_TLS_CA`
+- Image has now a default value for `RELAY_TLS_CA` (thanks to @kir4h)
 
 ## 3.0.0 (2019-03-30)
 
