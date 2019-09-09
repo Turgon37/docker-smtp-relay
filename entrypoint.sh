@@ -4,24 +4,24 @@ set -e
 
 ## Configure timezone
 function setTimezone() {
-  if [ -n "${TZ}" ]; then
-    echo "Configuring timezone to ${TZ}..."
-    if [ ! -f "/usr/share/zoneinfo/${TZ}" ]; then
-      echo "...#ERROR# failed to link timezone data from /usr/share/zoneinfo/${TZ}" 1>&2
-      exit 1
-    fi
-    ln -snf /usr/share/zoneinfo/$TZ /etc/localtime
-    echo $TZ > /etc/timezone
+  echo "Configuring timezone to ${1}..."
+  if [[ ! -f "/usr/share/zoneinfo/${1}" ]]; then
+    echo "...#ERROR# failed to link timezone data from /usr/share/zoneinfo/${1}" 1>&2
+    exit 1
   fi
+  ln -snf "/usr/share/zoneinfo/$1" /etc/localtime
+  echo "${1}" > /etc/timezone
 }
 
-# run command as main binary if it is different from the entrypoint
+# run command as main binary
 if ! expr match $1 '.*supervisord' >/dev/null; then
   exec "$@"
 fi
 
 # perform postfix startup actions only if main command is given to entrypoint
-setTimezone
+if [[ -n "${TZ}" ]]; then
+  setTimezone "${TZ}"
+fi
 
 # Set configuration according to ENV
 echo 'Settings postfix...'
