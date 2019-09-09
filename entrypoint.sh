@@ -95,6 +95,10 @@ if [[ \( -n "${RELAY_LOGIN}" && -n "${RELAY_PASSWORD}" \) || \( -f /etc/postfix/
     echo "you must fill RELAY_TLS_CA with the path to the CA file in the container" >&2
     exit 1
   fi
+  if [[ ! -f $RELAY_TLS_CA ]]; then
+    echo "The file at RELAY_TLS_CA must exists and be a valid file" >&2
+    exit 1
+  fi
   postconf -e "smtp_tls_CAfile = ${RELAY_TLS_CA}"
   postconf -e "smtp_tls_security_level = ${RELAY_TLS_VERIFY}"
   postconf -e 'smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache'
