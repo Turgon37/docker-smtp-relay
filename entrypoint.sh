@@ -32,28 +32,27 @@ postconf -e "relay_domains = ${RELAY_DOMAINS}"
 
 # Static restrictions for smtp clients
 if [[ "${RELAY_MODE}" = 'STRICT' ]]; then
-# set STRICT mode
-# no one can send mail to another domain than the relay domains list
-# only network/sasl authenticated user can send mail through relay
+  # set STRICT mode
+  # no one can send mail to another domain than the relay domains list
+  # only network/sasl authenticated user can send mail through relay
   postconf -e 'smtpd_relay_restrictions = reject_unauth_destination, permit_sasl_authenticated, permit_mynetworks, reject'
 elif [[ "${RELAY_MODE}" = 'ALLOW_SASLAUTH_NODOMAIN' ]]; then
-# set ALLOW_SASLAUTH_NODOMAIN mode
-# only authenticated smtp users can send email to another domain than the relay domains list
+  # set ALLOW_SASLAUTH_NODOMAIN mode
+  # only authenticated smtp users can send email to another domain than the relay domains list
   postconf -e 'smtpd_relay_restrictions = permit_sasl_authenticated, reject_unauth_destination, permit_mynetworks, reject'
 elif [[ "${RELAY_MODE}" = 'ALLOW_NETAUTH_NODOMAIN' ]]; then
-# set ALLOW_NETAUTH_NODOMAIN mode
-# only authenticated smtp users can send email to another domain than the relay domains list
+  # set ALLOW_NETAUTH_NODOMAIN mode
+  # only authenticated smtp users can send email to another domain than the relay domains list
   postconf -e 'smtpd_relay_restrictions = permit_mynetworks, reject_unauth_destination, permit_sasl_authenticated, reject'
 elif [[ "${RELAY_MODE}" = 'ALLOW_AUTH_NODOMAIN' ]]; then
-# set ALLOW_AUTH_NODOMAIN mode
-# no one can send mail to another domain than the relay domains list
-# only network/sasl authenticated user can send mail through relay
+  # set ALLOW_AUTH_NODOMAIN mode
+  # no one can send mail to another domain than the relay domains list
+  # only network/sasl authenticated user can send mail through relay
   postconf -e 'smtpd_relay_restrictions = permit_sasl_authenticated, permit_mynetworks, reject'
 else
-# set the content of the mode into the restrictions
+  # set the content of the mode into the restrictions
   postconf -e "smtpd_relay_restrictions = ${RELAY_MODE}"
 fi
-
 
 # Set hostname
 if [[ -n "${RELAY_MYHOSTNAME}" ]]; then
@@ -81,11 +80,12 @@ fi
 # Configure authentification to relay if needed
 if [[ \( -n "${RELAY_LOGIN}" && -n "${RELAY_PASSWORD}" \) || \( -f /etc/postfix/sasl_passwd \) ]]; then
   postconf -e 'smtp_sasl_auth_enable = yes'
-  # use password from hash database
+
   if [[ -n "${RELAY_LOGIN}" && -n "${RELAY_PASSWORD}" ]]; then
-   # use static database
+    # use static database using environment vars
     postconf -e "smtp_sasl_password_maps = inline:{${RELAY_HOST}=${RELAY_LOGIN}:${RELAY_PASSWORD}}"
   else
+     # use password from hash database
     postconf -e 'smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd'
     postmap /etc/postfix/sasl_passwd
   fi
@@ -129,5 +129,5 @@ if [ -f /etc/postfix/client_sasl_passwd ]; then
   done
 fi
 
-## Start
+# start
 exec "$@"

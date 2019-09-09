@@ -24,7 +24,7 @@ if [ -z "$POSTFIX_VERSION" ]; then
   image_tags="${image_tags} latest"
   test -n "$POSTFIX_VERSION"
 fi
-echo "-> selected Postfix version ${POSTFIX_VERSION}"
+echo "-> selected Postfix version '${POSTFIX_VERSION}'"
 
 # If empty version, fetch the latest from repository
 if [ -z "$RSYSLOG_VERSION" ]; then
