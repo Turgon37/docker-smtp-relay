@@ -53,7 +53,8 @@ RUN postconf -e 'notify_classes = bounce, 2bounce, data, delay, policy, protocol
     && echo 'mech_list: PLAIN LOGIN CRAM-MD5 DIGEST-MD5' >> /etc/sasl2/smtpd.conf
 
 # Add some configurations files
-COPY root/ /
+COPY /root/etc/* /etc/
+COPY /root/opt/* /opt/
 COPY /docker-entrypoint.sh /
 COPY /docker-entrypoint.d/* /docker-entrypoint.d/
 
