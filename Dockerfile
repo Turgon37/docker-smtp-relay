@@ -1,7 +1,7 @@
 #
 # Final stage for image
 #
-FROM alpine:3.10
+FROM alpine:3.11
 
 LABEL maintainer='Pierre GINDRAUD <pgindraud@gmail.com>'
 
@@ -53,10 +53,13 @@ RUN apk --no-cache add \
     && echo 'auxprop_plugin: sasldb' >> /etc/sasl2/smtpd.conf \
     && echo 'mech_list: PLAIN LOGIN CRAM-MD5 DIGEST-MD5' >> /etc/sasl2/smtpd.conf
 
-# copy local files
+# Add some configurations files
 COPY root/ /
+COPY /docker-entrypoint.sh /
+COPY /docker-entrypoint.d/* /docker-entrypoint.d/
 
-RUN  touch /etc/postfix/aliases \
+RUN chmod -R +x /docker-entrypoint.d/ \
+  & touch /etc/postfix/aliases \
   && touch /etc/postfix/sender_canonical \
   && mkdir -p /data \
   && ln -s /data/sasldb2 /etc/sasldb2
@@ -65,10 +68,8 @@ EXPOSE 25/tcp
 VOLUME ["/data"]
 WORKDIR /data
 
-HEALTHCHECK --interval=5s --timeout=3s --retries=3 \
-    CMD nc -zv 127.0.0.1 25 || exit 1
+HEALTHCHECK --interval=5s --timeout=2s --retries=3 \
+    CMD nc -znvw 1 127.0.0.1 25 || exit 1
 
-COPY /entrypoint.sh /
-
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["/usr/bin/supervisord", "--configuration", "/etc/supervisord.conf"]

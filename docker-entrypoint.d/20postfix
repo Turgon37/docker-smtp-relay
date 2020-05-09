@@ -2,27 +2,6 @@
 
 set -e
 
-## Configure timezone
-function setTimezone() {
-  echo "Configuring timezone to ${1}..."
-  if [[ ! -f "/usr/share/zoneinfo/${1}" ]]; then
-    echo "...#ERROR# failed to link timezone data from /usr/share/zoneinfo/${1}" 1>&2
-    exit 1
-  fi
-  ln -snf "/usr/share/zoneinfo/$1" /etc/localtime
-  echo "${1}" > /etc/timezone
-}
-
-# run command as main binary
-if ! expr match $1 '.*supervisord' >/dev/null; then
-  exec "$@"
-fi
-
-# perform postfix startup actions only if main command is given to entrypoint
-if [[ -n "${TZ}" ]]; then
-  setTimezone "${TZ}"
-fi
-
 # Set configuration according to ENV
 echo 'Settings postfix...'
 postconf -e "mydomain = ${RELAY_MYDOMAIN}"
@@ -106,12 +85,12 @@ if [[ \( -n "${RELAY_LOGIN}" && -n "${RELAY_PASSWORD}" \) || \( -f /etc/postfix/
 fi
 
 # Restrict sender adresses to only theses of the relay domain
-if [ "$RELAY_STRICT_SENDER_MYDOMAIN" = 'true' ]; then
+if [[ "$RELAY_STRICT_SENDER_MYDOMAIN" = 'true' ]]; then
   postconf -e "smtpd_sender_restrictions = check_sender_access inline:{$RELAY_MYDOMAIN=OK}, reject"
 fi
 
 # set extras configurations
-if [ ! -z "${RELAY_EXTRAS_SETTINGS}" ]; then
+if [[ ! -z "${RELAY_EXTRAS_SETTINGS}" ]]; then
   for item in ${RELAY_EXTRAS_SETTINGS}; do
     echo "...set extras setting... ${item}"
     postconf -e "${item}"
@@ -120,7 +99,7 @@ fi
 
 echo 'Bulk registering sasl users...'
 # Fill the sasl user database with seed
-if [ -f /etc/postfix/client_sasl_passwd ]; then
+if [[ -f /etc/postfix/client_sasl_passwd ]]; then
   [ ! -r /etc/postfix/client_sasl_passwd ] && {
     echo "client_sasl_passwd database is not readable" >&2
     exit 1
@@ -132,6 +111,3 @@ if [ -f /etc/postfix/client_sasl_passwd ]; then
     echo "...registered user '${user}' into sasl database"
   done
 fi
-
-# start
-exec "$@"
