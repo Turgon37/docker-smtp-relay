@@ -1,6 +1,6 @@
 # Docker SMTP Relay
 
-[![Build Status](https://travis-ci.org/Turgon37/docker-smtp-relay.svg?branch=master)](https://travis-ci.org/Turgon37/docker-smtp-relay)
+[![Build Status](https://travis-ci.com/Turgon37/docker-smtp-relay.svg?branch=master)](https://travis-ci.com/Turgon37/docker-smtp-relay)
 [![](https://images.microbadger.com/badges/image/turgon37/smtp-relay.svg)](https://microbadger.com/images/turgon37/smtp-relay "Get your own image badge on microbadger.com")
 [![](https://images.microbadger.com/badges/version/turgon37/smtp-relay.svg)](https://microbadger.com/images/turgon37/smtp-relay "Get your own version badge on microbadger.com")
 
