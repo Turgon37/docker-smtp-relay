@@ -22,7 +22,7 @@ if [[ -z $(command -v container-structure-test 2>/dev/null) ]]; then
   else
     curl -sS -LO https://storage.googleapis.com/container-structure-test/latest/container-structure-test-linux-amd64 \
     && chmod +x container-structure-test-linux-amd64 \
-    && sudo mv container-structure-test-linux-amd64 /usr/local/bin/container-structure-test
+    && mv container-structure-test-linux-amd64 container-structure-test
   fi
 fi
 
@@ -35,5 +35,7 @@ source "${PWD}/_tools.sh"
 
 
 ## Test
-container-structure-test \
+
+# Image tests
+./container-structure-test \
     test --image "${image_building_name}" --config ./tests.yml
