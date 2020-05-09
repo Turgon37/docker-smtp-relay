@@ -1,7 +1,0 @@
-#!/bin/sh
-
-set -e
-
-for f in hosts localtime nsswitch.conf resolv.conf services; do
-  cp /etc/$f /var/spool/postfix/etc/
-done
