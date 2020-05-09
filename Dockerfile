@@ -23,6 +23,9 @@ ENV RELAY_TLS_CA /etc/ssl/certs/ca-certificates.crt
 #ENV RELAY_PASSWORD=xxxxxxxx
 #ENV RELAY_EXTRAS_SETTINGS
 
+ENV POSTCONF_inet_interfaces all
+ENV POSTCONF_inet_protocols ipv4
+
 # Install dependencies
 RUN apk --no-cache add \
       cyrus-sasl \
@@ -38,8 +41,6 @@ RUN postconf -e 'notify_classes = bounce, 2bounce, data, delay, policy, protocol
     && postconf -e 'bounce_notice_recipient = $2bounce_notice_recipient' \
     && postconf -e 'delay_notice_recipient = $2bounce_notice_recipient' \
     && postconf -e 'error_notice_recipient = $2bounce_notice_recipient' \
-    && postconf -e 'inet_interfaces = all' \
-    && postconf -e 'inet_protocols = all' \
     && postconf -e 'myorigin = $mydomain' \
     && postconf -e 'smtpd_sasl_auth_enable = yes' \
     && postconf -e 'smtpd_sasl_type = cyrus' \
