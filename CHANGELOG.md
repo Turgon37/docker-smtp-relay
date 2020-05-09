@@ -5,6 +5,9 @@ Items starting with `DEPRECATE` are important deprecation notices.
 ## 3.2.0 (2020-05-09)
 
 + Split entrypoint tasks into separated files
++ Update rsyslog config to new syntax
++ Update supervisord config
++ Use postfix start-fg command to run postfix
 
 
 ## 3.1.0 (2019-09-09)
