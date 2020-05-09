@@ -1,2 +1,2 @@
 #!/bin/sh
-sasldblistusers2
+sasldblistusers2 -f /data/sasldb2
