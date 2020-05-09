@@ -10,16 +10,16 @@ DOCKERFILE_PATH=Dockerfile
 set -e
 
 ## Local settings
-alpine_version=`cat Dockerfile | grep --perl-regexp --only-matching '(?<=FROM alpine:)[0-9.]+'`
-arch=`uname --machine`
+alpine_version=$(grep --perl-regexp --only-matching '(?<=FROM alpine:)[0-9.]+' Dockerfile)
+arch=$(uname --machine)
 
 ## Settings initialization
 set -e
 
 # If empty version, fetch the latest from repository
-if [ -z "$POSTFIX_VERSION" ]; then
-  POSTFIX_VERSION=`curl -s "https://pkgs.alpinelinux.org/packages?name=postfix&branch=v${alpine_version}&repo=main&arch=${arch}" \
-                     | grep --perl-regexp --only-matching '(?<=<td class="version">)[a-z0-9.-]+' | uniq`
+if [[ -z "$POSTFIX_VERSION" ]]; then
+  POSTFIX_VERSION=$(curl -s "https://pkgs.alpinelinux.org/packages?name=postfix&branch=v${alpine_version}&repo=main&arch=${arch}" \
+                     | grep --perl-regexp --only-matching '(?<=<td class="version">)[a-z0-9.-]+' | uniq)
   # no postfix fixed version => latest build
   image_tags="${image_tags} latest"
   test -n "$POSTFIX_VERSION"
@@ -27,30 +27,30 @@ fi
 echo "-> selected Postfix version '${POSTFIX_VERSION}'"
 
 # If empty version, fetch the latest from repository
-if [ -z "$RSYSLOG_VERSION" ]; then
-  RSYSLOG_VERSION=`curl -s "https://pkgs.alpinelinux.org/packages?name=rsyslog&branch=v${alpine_version}&repo=main&arch=${arch}" \
-                     | grep --perl-regexp --only-matching '(?<=<td class="version">)[a-z0-9.-]+' | uniq`
+if [[ -z "$RSYSLOG_VERSION" ]]; then
+  RSYSLOG_VERSION=$(curl -s "https://pkgs.alpinelinux.org/packages?name=rsyslog&branch=v${alpine_version}&repo=main&arch=${arch}" \
+                     | grep --perl-regexp --only-matching '(?<=<td class="version">)[a-z0-9.-]+' | uniq)
   test -n "$RSYSLOG_VERSION"
 fi
 echo "-> selected Rsyslog version '${RSYSLOG_VERSION}'"
 
 # If empty commit, fetch the current from local git rpo
-if [ -n "${SOURCE_COMMIT}" ]; then
+if [[ -n "${SOURCE_COMMIT}" ]]; then
   VCS_REF="${SOURCE_COMMIT}"
-elif [ -n "${TRAVIS_COMMIT}" ]; then
+elif [[ -n "${TRAVIS_COMMIT}" ]]; then
   VCS_REF="${TRAVIS_COMMIT}"
 else
-  VCS_REF="`git rev-parse --short HEAD`"
+  VCS_REF="$(git rev-parse --short HEAD)"
 fi
 test -n "${VCS_REF}"
 echo "-> current vcs reference '${VCS_REF}'"
 
 # Get the current image static version
-image_version=`cat VERSION`
+image_version=$(cat VERSION)
 echo "-> use image version '${image_version}'"
 
 # Compute variant from dockerfile name
-if ! [ -f ${DOCKERFILE_PATH} ]; then
+if ! [[ -f ${DOCKERFILE_PATH} ]]; then
   echo 'You must select a valid dockerfile with DOCKERFILE_PATH' 1>&2
   exit 1
 fi
@@ -62,7 +62,7 @@ echo "-> use image name '${image_building_name}' for build"
 echo "=> building '${image_building_name}' with image version '${image_version}'"
 docker build --build-arg "POSTFIX_VERSION=${POSTFIX_VERSION}" \
              --build-arg "RSYSLOG_VERSION=${RSYSLOG_VERSION}" \
-             --label "org.label-schema.build-date=`date -u +'%Y-%m-%dT%H:%M:%SZ'`" \
+             --label "org.label-schema.build-date=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" \
              --label 'org.label-schema.name=smtp-relay' \
              --label 'org.label-schema.description=SMTP server configured as a email relay' \
              --label 'org.label-schema.url=https://github.com/Turgon37/docker-smtp-relay' \

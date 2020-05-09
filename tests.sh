@@ -13,7 +13,7 @@ echo "-> use image name '${image_building_name}' for tests"
 
 
 ## Prepare
-if [[ -z $(which container-structure-test 2>/dev/null) ]]; then
+if [[ -z $(command -v container-structure-test 2>/dev/null) ]]; then
   echo "Retrieving structure-test binary...."
   if [[ -n "${TRAVIS_OS_NAME}" && "$TRAVIS_OS_NAME" != 'linux' ]]; then
     echo "container-structure-test only released for Linux at this time."
@@ -28,9 +28,10 @@ fi
 
 # Download tools shim.
 if [[ ! -f _tools.sh ]]; then
-  curl -L -o ${PWD}/_tools.sh https://gist.github.com/Turgon37/2ba8685893807e3637ea3879ef9d2062/raw
+  curl -L -o "${PWD}/_tools.sh" https://gist.github.com/Turgon37/2ba8685893807e3637ea3879ef9d2062/raw
 fi
-source ${PWD}/_tools.sh
+# shellcheck disable=SC1090
+source "${PWD}/_tools.sh"
 
 
 ## Test
