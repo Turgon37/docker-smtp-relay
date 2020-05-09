@@ -105,10 +105,12 @@ if [ -f /etc/postfix/client_sasl_passwd ]; then
     echo "client_sasl_passwd database is not readable" >&2
     exit 1
   }
-  for peer in "$(cat /etc/postfix/client_sasl_passwd)"; do
-    $user=$(echo "${peer}" | awk '{ print $1 }')
-    $pass=$(echo "${peer}" | awk '{ print $2 }')
-    echo "${pass}" | /opt/postfix/saslpasswd2.sh -p -u "${RELAY_MYDOMAIN}" -c "${user}"
+
+  # TODO improve performance for huge users list
+  while read -r line; do
+    user=$(echo "${line}" | awk '{ print $1 }')
+    pass=$(echo "${line}" | awk '{ print $2 }')
+    echo "${pass}" | /opt/saslpasswd.sh -p -u "${RELAY_MYDOMAIN}" -c "${user}"
     echo "...registered user '${user}' into sasl database"
-  done
+  done < /etc/postfix/client_sasl_passwd
 fi

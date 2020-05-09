@@ -55,3 +55,22 @@ if ! [[ $(docker exec "${image_name}" readlink -f /etc/localtime) =~ Europe/Pari
   false
 fi
 stop_and_remove_container "${image_name}"
+
+
+#2 Test sasl_client feed
+echo '-> 3 Test sasl_client feed'
+image_name=smtp_3
+cat >/tmp/client_sasl_passwd <<EOF
+user1 password1
+user2 password2
+user3 password3
+EOF
+docker run $docker_run_options --name "${image_name}" -v /tmp/client_sasl_passwd:/etc/postfix/client_sasl_passwd "${image_building_name}"
+wait_for_string_in_container_logs "${image_name}" 'connect from localhost'
+# test
+if ! docker exec "${image_name}" test -f /data/sasldb2 && \
+     [[ $(docker exec "${image_name}" /opt/listpasswd.sh | wc -l) == $(wc -l < /tmp/client_sasl_passwd) ]]; then
+  docker logs "${image_name}"
+  false
+fi
+stop_and_remove_container "${image_name}"
