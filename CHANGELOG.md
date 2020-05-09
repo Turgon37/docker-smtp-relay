@@ -4,10 +4,18 @@ Items starting with `DEPRECATE` are important deprecation notices.
 
 ## 3.2.0 (2020-05-09)
 
++ Update alpine to 3.11
 + Split entrypoint tasks into separated files
 + Update rsyslog config to new syntax
 + Update supervisord config
 + Use postfix start-fg command to run postfix
++ Add missing package for timezone to work
++ Add postconf entrypoint hook from POSTCONF_* variables
+
+### Build process
+
++ Add shellcheck tests
++ Prevent overwrite /etc permissions during COPY
 
 
 ## 3.1.0 (2019-09-09)
