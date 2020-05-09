@@ -30,24 +30,22 @@ RUN apk --no-cache add \
       cyrus-sasl-crammd5 \
       postfix=$POSTFIX_VERSION \
       rsyslog=$RSYSLOG_VERSION \
-      supervisor \
-    && echo Configuration of main.cf \
-    && postconf -e 'notify_classes = bounce, 2bounce, data, delay, policy, protocol, resource, software' \
+      supervisor
+
+# Configuration of main.cf
+RUN postconf -e 'notify_classes = bounce, 2bounce, data, delay, policy, protocol, resource, software' \
     && postconf -e 'bounce_notice_recipient = $2bounce_notice_recipient' \
     && postconf -e 'delay_notice_recipient = $2bounce_notice_recipient' \
     && postconf -e 'error_notice_recipient = $2bounce_notice_recipient' \
     && postconf -e 'inet_interfaces = all' \
     && postconf -e 'inet_protocols = all' \
     && postconf -e 'myorigin = $mydomain' \
-    && echo SMTPD auth \
     && postconf -e 'smtpd_sasl_auth_enable = yes' \
     && postconf -e 'smtpd_sasl_type = cyrus' \
     && postconf -e 'smtpd_sasl_local_domain = $mydomain' \
     && postconf -e 'smtpd_sasl_security_options = noanonymous' \
-    && echo Other configurations \
     && postconf -e 'smtpd_banner = $myhostname ESMTP $mail_name RELAY' \
     && postconf -e 'smtputf8_enable = no' \
-    && echo Configuration of sasl2 \
     && mkdir -p /etc/sasl2 \
     && echo 'pwcheck_method: auxprop' > /etc/sasl2/smtpd.conf \
     && echo 'auxprop_plugin: sasldb' >> /etc/sasl2/smtpd.conf \
