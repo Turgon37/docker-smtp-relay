@@ -97,3 +97,13 @@ done
 
 ## Logout from registry
 docker logout
+
+
+## Publish README
+# only for production branch
+if [[ "${VCS_BRANCH}" == "${PRODUCTION_BRANCH}" && -n "${UPDATE_README}" ]]; then
+  set -o pipefail
+  TOKEN=$(curl --fail --silent -H "Content-Type: application/json" -X POST -d "{\"username\": \"${DOCKERHUB_REGISTRY_USERNAME}\", \"password\": \"${DOCKERHUB_REGISTRY_PASSWORD}\"}" https://hub.docker.com/v2/users/login/ | grep --perl-regexp --only-matching '(?<=token": ")[^"]+')
+  curl --fail --silent -H "Authorization: JWT $TOKEN" -X PATCH "https://hub.docker.com/v2/repositories/${username}/${repo}/" --data-urlencode full_description@./README.md
+  set +o pipefail
+fi
