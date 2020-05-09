@@ -42,3 +42,16 @@ find . -name '*.sh' | xargs shellcheck docker-entrypoint.d/*
 # Image tests
 ./container-structure-test \
     test --image "${image_building_name}" --config ./tests.yml
+
+
+#2 Test timezone setting
+echo '-> 2 Test timezone'
+image_name=smtp_2
+docker run $docker_run_options --name "${image_name}" --env='TZ=Europe/Paris' "${image_building_name}"
+wait_for_string_in_container_logs "${image_name}" 'connect from localhost'
+# test
+if ! [[ $(docker exec "${image_name}" readlink -f /etc/localtime) =~ Europe/Paris$ ]]; then
+  docker logs "${image_name}"
+  false
+fi
+stop_and_remove_container "${image_name}"
