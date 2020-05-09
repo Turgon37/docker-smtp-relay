@@ -11,11 +11,17 @@ Items starting with `DEPRECATE` are important deprecation notices.
 + Use postfix start-fg command to run postfix
 + Add missing package for timezone to work
 + Add postconf entrypoint hook from POSTCONF_* variables
++ Fix #17 sasl_client bulk feed (thanks @mattstrain) #17
++ Fix sasl passwd list command
 
 ### Build process
 
 + Add shellcheck tests
 + Prevent overwrite /etc permissions during COPY
+
+### Deprecation
+
+- DEPRECATE RELAY_EXTRAS_SETTINGS settings in favor of POSTCONF_ variables (will be removed in 4.0)
 
 
 ## 3.1.0 (2019-09-09)
