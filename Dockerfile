@@ -30,7 +30,8 @@ RUN apk --no-cache add \
       cyrus-sasl-crammd5 \
       postfix=$POSTFIX_VERSION \
       rsyslog=$RSYSLOG_VERSION \
-      supervisor
+      supervisor \
+      tzdata
 
 # Configuration of main.cf
 RUN postconf -e 'notify_classes = bounce, 2bounce, data, delay, policy, protocol, resource, software' \
