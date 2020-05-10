@@ -15,6 +15,7 @@ Items starting with `DEPRECATE` are important deprecation notices.
 + Fix sasl passwd list command
 + Declare /var/spool/postfix as volume to persist queue
 + Fix bad check condition with RELAY TLS
++ Apply smtp_tls_CAfile only if TLS is used
 
 ### Build process
 
