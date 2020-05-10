@@ -13,11 +13,13 @@ Items starting with `DEPRECATE` are important deprecation notices.
 + Add postconf entrypoint hook from POSTCONF_* variables
 + Fix #17 sasl_client bulk feed (thanks @mattstrain) #17
 + Fix sasl passwd list command
++ Declare /var/spool/postfix as volume to persist queue
 
 ### Build process
 
 + Add shellcheck tests
 + Prevent overwrite /etc permissions during COPY
++ Improve publish script and edit pushed tags
 
 ### Deprecation
 
