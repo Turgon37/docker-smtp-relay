@@ -79,8 +79,8 @@ if [ -n "${RELAY_LOGIN}" ] && [ -n "${RELAY_PASSWORD}" ] || [ -f /etc/postfix/sa
       echo "The file at RELAY_TLS_CA must exists and be a valid file" >&2
       exit 1
     fi
+    postconf -e "smtp_tls_CAfile = ${RELAY_TLS_CA}"
   fi
-  postconf -e "smtp_tls_CAfile = ${RELAY_TLS_CA}"
   postconf -e "smtp_tls_security_level = ${RELAY_TLS_VERIFY}"
   # shellcheck disable=SC2016
   postconf -e 'smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache'
