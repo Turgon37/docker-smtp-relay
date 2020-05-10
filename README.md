@@ -209,3 +209,12 @@ If you want to add multiple sasl users at the same time you can mount (-v) your 
 This list must contains one credential per line and for each line use the syntax  'USERNAME PASSWORD'  (the username and the password are separated with a blank space)
 
 You can check with docker logs if all of your line has been correctly parsed
+
+
+### Troubleshooting
+
+An simple SMTP client is embedded with this image. You can use it to test your settings
+
+```
+docker exec -it smtp-relay /opt/smtp_client.py -s test -f noreply@domain.com --user user1:password1 admin@domain.com
+```

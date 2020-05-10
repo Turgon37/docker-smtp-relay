@@ -17,6 +17,7 @@ Items starting with `DEPRECATE` are important deprecation notices.
 + Fix bad check condition with RELAY TLS
 + Apply smtp_tls_CAfile only if TLS is used
 + Move utility script from /opt/postfix to /opt
++ Add utility script /opt/smtp_client.py
 + Improve sasldb pwcheck configuration
 
 ### Build process
