@@ -14,6 +14,7 @@ Items starting with `DEPRECATE` are important deprecation notices.
 + Fix #17 sasl_client bulk feed (thanks @mattstrain) #17
 + Fix sasl passwd list command
 + Declare /var/spool/postfix as volume to persist queue
++ Fix bad check condition with RELAY TLS
 
 ### Build process
 
