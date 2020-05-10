@@ -16,10 +16,14 @@ Items starting with `DEPRECATE` are important deprecation notices.
 + Declare /var/spool/postfix as volume to persist queue
 + Fix bad check condition with RELAY TLS
 + Apply smtp_tls_CAfile only if TLS is used
++ Move utility script from /opt/postfix to /opt
 
 ### Build process
 
 + Add shellcheck tests
++ Add timezone test
++ Add sasl client credentials feed test
++ Add sasl client auth test
 + Prevent overwrite /etc permissions during COPY
 + Improve publish script and edit pushed tags
 
