@@ -37,13 +37,6 @@ else
 fi
 echo "-> use image name '${image_building_name}' for publish"
 
-application_version=$(docker inspect -f '{{ index .Config.Labels "application.postfix.version"}}' "${image_building_name}")
-
-if [[ -z "$GLPI_VERSION" ]]; then
-  # no fixed application version => latest build
-  image_tags="latest ${application_version}-latest"
-fi
-
 # If empty branch, fetch the current from local git rpo
 if [[ -n "${SOURCE_BRANCH}" ]]; then
   VCS_BRANCH="${SOURCE_BRANCH}"
@@ -55,48 +48,41 @@ fi
 test -n "${VCS_BRANCH}"
 echo "-> current vcs branch '${VCS_BRANCH}'"
 
-# set the docker tag prefix if needed
-if [ "${VCS_BRANCH}" != "${PRODUCTION_BRANCH}" ]; then
-  image_tags_prefix="${VCS_BRANCH}-${image_tags_prefix}"
-  echo "-> use tag prefix '${image_tags_prefix}'"
-fi
-
-# customs tags
-image_tags="${image_tags} ${application_version}-${image_version}"
-echo "-> use image tags '${image_tags}'"
-
-# finals
-image_final_tags=()
-for tag in $image_tags; do
-  image_final_tags+=("${image_tags_prefix}${tag}")
-done
-image_final_tags=("$(echo -n "${image_final_tags[*]}" | tr ' ' '\n' | sort -u | tr '\n' ' ')")
-echo "-> use final image tags list '${image_final_tags[*]}'"
-
-## Enforce versioning
-for tag in ${image_final_tags[*]}; do
-  if echo "$tag" | grep -q "$image_version"; then
-    echo "-? check if image version '$image_version' already exists in registry"
-    if curl -s "https://hub.docker.com/v2/repositories/${username}/${repo}/tags/?page_size=100" | grep -q "\"name\": \"${tag}\""; then
-      echo "ERROR: Tag '${tag}' for image version '$image_version' already exists in registry" 1>&2
-      exit 0
-    fi
+# set the docker publish logic per branch
+application_version=$(docker inspect -f '{{ index .Config.Labels "application.postfix.version" }}' "${image_building_name}")
+publish=false
+if [[ "${VCS_BRANCH}" == "${PRODUCTION_BRANCH}" ]]; then
+  image_tags=(latest ${application_version}-latest ${application_version}-${image_version})
+  if curl -s "https://hub.docker.com/v2/repositories/${username}/${repo}/tags/?page_size=100" | grep -q "\"name\": \"${application_version}-${image_version}\""; then
+    publish=true
   fi
-done
+elif [[ "${VCS_BRANCH}" == "develop" ]]; then
+  image_tags=(develop-latest develop-${application_version}-${image_version})
+  publish=true
+fi
+echo "-> use image tags '${image_tags[*]}'"
 
-## Login to registry
-echo "$DOCKERHUB_REGISTRY_PASSWORD" | docker login --username="$DOCKERHUB_REGISTRY_USERNAME" --password-stdin
 
-## Push images
-for tag in ${image_final_tags[*]}; do
-  echo "=> tag image '${image_building_name}' as '${DOCKER_IMAGE}:${tag}'"
-  docker tag "${image_building_name}" "${DOCKER_IMAGE}:${tag}"
-  echo "=> push image '${DOCKER_IMAGE}:${tag}'"
-  docker push "${DOCKER_IMAGE}:${tag}"
-done
+## Publish image
+if [[ "${publish}" != "true" ]]; then
+  echo "-> No need to Push to Registry"
+else
+  echo "-> Pushing to registry.."
 
-## Logout from registry
-docker logout
+  ## Login to registry
+  echo "$DOCKERHUB_REGISTRY_PASSWORD" | docker login --username="$DOCKERHUB_REGISTRY_USERNAME" --password-stdin
+
+  ## Push images
+  for tag in ${image_tags[*]}; do
+    echo "=> tag image '${image_building_name}' as '${DOCKER_IMAGE}:${tag}'"
+    docker tag "${image_building_name}" "${DOCKER_IMAGE}:${tag}"
+    echo "=> push image '${DOCKER_IMAGE}:${tag}'"
+    docker push "${DOCKER_IMAGE}:${tag}"
+  done
+
+  ## Logout from registry
+  docker logout
+fi
 
 
 ## Publish README
