@@ -27,14 +27,7 @@ if [[ -z "$DOCKERHUB_REGISTRY_USERNAME" || -z "$DOCKERHUB_REGISTRY_PASSWORD" ]];
 fi
 
 image_version=$(cat VERSION)
-
-if [[ -n ${IMAGE_VARIANT} ]]; then
-  image_building_name="${DOCKER_IMAGE}:building_${IMAGE_VARIANT}"
-  image_tags_prefix="${IMAGE_VARIANT}-"
-  echo "-> set image variant '${IMAGE_VARIANT}' for build"
-else
-  image_building_name="${DOCKER_IMAGE}:building"
-fi
+image_building_name="${DOCKER_IMAGE}:building"
 echo "-> use image name '${image_building_name}' for publish"
 
 # If empty branch, fetch the current from local git rpo
@@ -52,12 +45,12 @@ echo "-> current vcs branch '${VCS_BRANCH}'"
 application_version=$(docker inspect -f '{{ index .Config.Labels "application.postfix.version" }}' "${image_building_name}")
 publish=false
 if [[ "${VCS_BRANCH}" == "${PRODUCTION_BRANCH}" ]]; then
-  image_tags=(latest ${application_version}-latest ${application_version}-${image_version})
+  image_tags=(latest "${application_version}-latest" "${application_version}-${image_version}")
   if curl -s "https://hub.docker.com/v2/repositories/${username}/${repo}/tags/?page_size=100" | grep -q "\"name\": \"${application_version}-${image_version}\""; then
     publish=true
   fi
 elif [[ "${VCS_BRANCH}" == "develop" ]]; then
-  image_tags=(develop-latest develop-${application_version}-${image_version})
+  image_tags=(develop-latest "develop-${application_version}-${image_version}")
   publish=true
 fi
 echo "-> use image tags '${image_tags[*]}'"
