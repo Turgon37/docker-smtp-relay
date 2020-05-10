@@ -66,7 +66,7 @@ RUN chmod -R +x /docker-entrypoint.d/ \
   && ln -s /data/sasldb2 /etc/sasldb2
 
 EXPOSE 25/tcp
-VOLUME ["/data"]
+VOLUME ["/data","/var/spool/postfix"]
 WORKDIR /data
 
 HEALTHCHECK --interval=5s --timeout=2s --retries=3 \
