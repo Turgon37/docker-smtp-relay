@@ -64,7 +64,7 @@ COPY /docker-entrypoint.sh /
 COPY /docker-entrypoint.d/* /docker-entrypoint.d/
 
 RUN chmod -R +x /docker-entrypoint.d/ \
-  & touch /etc/postfix/aliases \
+  && touch /etc/postfix/aliases \
   && touch /etc/postfix/sender_canonical \
   && mkdir -p /data
 
