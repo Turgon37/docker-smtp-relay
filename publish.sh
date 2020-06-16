@@ -47,7 +47,7 @@ publish=false
 if [[ "${VCS_BRANCH}" == "${PRODUCTION_BRANCH}" ]]; then
   image_tags=(latest "${application_version}-latest" "${application_version}-${image_version}")
   if ! curl -s "https://hub.docker.com/v2/repositories/${username}/${repo}/tags/?page_size=100" \
-       | grep --quiet "\"name\": \"${application_version}-${image_version}\""; then
+       | grep --quiet "\"name\": *\"${application_version}-${image_version}\""; then
     publish=true
   fi
 elif [[ "${VCS_BRANCH}" == "develop" ]]; then
