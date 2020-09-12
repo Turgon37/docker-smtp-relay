@@ -1,0 +1,15 @@
+#!/bin/sh
+
+set -e
+
+queue_directory=$(postconf -h queue_directory)
+cd "$queue_directory"
+
+FILES="etc/localtime etc/services etc/resolv.conf etc/hosts \
+        etc/host.conf etc/nsswitch.conf etc/nss_mdns.config"
+
+for file in $FILES; do
+  [ -d "${file%/*}" ] || mkdir -p "${file%/*}"
+  if [ -f "/${file}" ]; then rm -f "${file}" && cp "/${file}" "${file}"; fi
+  if [ -f  "${file}" ]; then chmod a+rX "${file}"; fi
+done

@@ -1,0 +1,27 @@
+version: '3.2'
+services:
+
+  smtp-relay:
+    image: turgon37/smtp-relay:latest
+    hostname: smtp-relay
+    domainname: local
+    dns_search: local
+    environment:
+      TZ: Europe/Paris
+      RELAY_POSTMASTER: postmaster@domain.com
+      RELAY_MYHOSTNAME: smtp-relay.local
+      RELAY_MYDOMAIN: domain.com
+      RELAY_MYNETWORKS: '127.0.0.0/8 172.16.0.0/12'
+      RELAY_HOST: '[maildev.local]:25'
+      POSTCONF_compatibility_level: '2'
+    ports:
+      - 25:25/tcp
+
+  maildev:
+    image: maildev/maildev:latest
+    networks:
+      default:
+        aliases:
+          - maildev.local
+    ports:
+      - 8010:80

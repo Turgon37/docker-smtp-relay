@@ -12,7 +12,11 @@ env:
     - secure: 'To0DN++rEnztftetouXKHeJCV20/2W+eFUlcWsIszlCnEOYUCx9PyKKT1lEIu1gQ8d4Oxu5LBHY4XLzNhvfT5BuO0rBFdzxm2QkUjKmg9X/kWf4ebkxKhWqjXD4rS/e6/Zsj/5ocAFw9vqzQjILJdvvBTz8D9v4sFtBnmmCJLVbd6RvdU8DemZAk21uJqIxCvZ81vyLwCW1syHK35icdrxsS3x6IEFJ1W2aEPCmTALE9EHoixR4XuD1OI8+AKN7avphy9ZyaetCz6YPfVe6aaXcEsih2YFoZ9B2xBRZmKzqY5/N/taRoAx99kY+2b/iN/5TFJ7PT+/bvYYQD4eA29HIHwdbsrV087URiRQ56/YNq+CkfXvB37tMc4LjNFeSHHCmXXqxbq1xVYmANGgMM3L9MsB1CRKe1lthA3qFBFgCjTsAFsfEHnIawSxAznHlS3w9S8VYDV0KyvjwighQW5U5UOJFV0O9SZCopqcJtQwrSsPjExi7lWXqPII4LWcq9FN+y2uLn2IyHpKKvSG8hmq6xFSO05RPQWtXgSI3GQ/RqccuUxUuh8L7rj+CPjlnwG6gNE3I96chJfJ3ds51gtwhmjWfyiODwDnu2SyOgTvhkVfD/ikhMMHGcAsUNjgqkUHUAI99E61lspD6StotFXve+dh4kryBRFxq25Sx1RiQ='
   matrix:
     # Provide a list of service version to build
-    - POSTFIX_VERSION='' RSYSLOG_VERSION=''
+    - POSTFIX_VERSION='' RSYSLOG_VERSION='' UPDATE_README=1
+
+before_install:
+    - sudo apt update
+    - sudo apt install -y shellcheck
 
 script:
   #
