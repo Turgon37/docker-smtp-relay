@@ -99,7 +99,7 @@ docker pull turgon37/smtp-relay
 ## Usage
 
 ```bash
-docker run -p 25:25 -e "RELAY_MYDOMAIN=domain.com" -e "RELAY_HOST=relay:25" turgon37/smtp-relay
+docker run --name smtp-relay -p 25:25 -e "RELAY_MYDOMAIN=domain.com" -e "RELAY_HOST=relay:25" turgon37/smtp-relay
 ```
 
 ### Docker-compose Specific configuration examples
